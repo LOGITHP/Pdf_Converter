@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Title and SEO Tags -->
-    <title>AeroPDF Converter & Compressor - Premium Local File Tool</title>
+    <title>AeroPDF Converter and Compressor - Premium Local File Tool</title>
     <meta name="description" content="Convert Word documents, Excel spreadsheets, Jupyter Notebooks, Markdown files, Source code, Images, and plain text files directly to high-fidelity PDF documents in your browser. Compress images and PDF files offline.">
     <meta name="keywords" content="pdf converter, pdf compressor, image compressor, docx to pdf, xlsx to pdf, ipynb to pdf, local converter, web tools">
     
@@ -15,23 +15,23 @@
     <!-- Prism Syntax Highlighter Stylesheet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
     <div class="container">
         <!-- Main Header -->
         <header>
             <div class="logo">
-                <h1 id="app-title">AeroPDF <span>v1.1</span></h1>
+                <h1 id="app-title">AeroPDF <span>v1.2</span></h1>
             </div>
             <div class="controls">
-                <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">☀️</button>
+                <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme" style="display: none;">Toggle Theme</button>
             </div>
         </header>
 
         <!-- Navigation Tabs -->
         <nav class="nav-tabs">
-            <button id="tab-converter" class="tab-btn active">⚡ PDF Converter</button>
-            <button id="tab-compressor" class="tab-btn">📦 File Compressor</button>
+            <button id="tab-converter" class="tab-btn active">PDF Converter</button>
+            <button id="tab-compressor" class="tab-btn">File Compressor</button>
         </nav>
 
         <!-- Tab 1: PDF Converter Section -->
@@ -40,10 +40,11 @@
             <section class="card" aria-labelledby="upload-section-title">
                 <h2 id="upload-section-title" style="display:none;">Upload Area</h2>
                 <div id="dropzone" class="dropzone">
-                    <div class="dropzone-icon">📥</div>
-                    <div class="dropzone-title">Drag & drop files here</div>
+                    <div class="dropzone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    </div>
+                    <div class="dropzone-title">Drag and drop files here</div>
                     <div class="dropzone-subtitle">or click to browse from your device</div>
-                    <input type="file" id="file-input" class="file-input" multiple>
                     
                     <!-- Supported Format Badges -->
                     <div class="format-tags">
@@ -53,9 +54,11 @@
                         <span class="format-tag image">Images (.png, .jpg, .webp)</span>
                         <span class="format-tag code">Code (.py, .js, .json)</span>
                         <span class="format-tag code">Markdown (.md)</span>
-                        <span class="format-tag code">CSV & Text (.csv, .txt)</span>
+                        <span class="format-tag code">CSV and Text (.csv, .txt)</span>
                     </div>
                 </div>
+                <!-- File input placed outside to prevent event bubbling conflicts -->
+                <input type="file" id="file-input" class="file-input" multiple>
             </section>
 
             <!-- Conversion Queue Section -->
@@ -63,8 +66,8 @@
                 <div class="queue-header">
                     <h2 id="queue-section-title" class="queue-title">Conversion Queue</h2>
                     <div class="controls">
-                        <button id="convert-all-btn" class="btn btn-primary" disabled>⚡ Convert All</button>
-                        <button id="clear-all-btn" class="btn btn-secondary" disabled>✖ Clear All</button>
+                        <button id="convert-all-btn" class="btn btn-primary" disabled>Convert All</button>
+                        <button id="clear-all-btn" class="btn btn-secondary" disabled>Clear All</button>
                     </div>
                 </div>
 
@@ -75,14 +78,16 @@
 
                 <!-- Empty Queue Placeholder -->
                 <div id="empty-queue" class="empty-queue">
-                    <div class="empty-queue-icon">📁</div>
+                    <div class="empty-queue-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
                     <div>Queue is empty</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Upload some files to begin conversion</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Upload files to begin conversion</div>
                 </div>
                 
                 <!-- Actions Footer -->
                 <div class="actions-bar">
-                    <button id="download-all-btn" class="btn btn-success" disabled>📦 Download All (ZIP)</button>
+                    <button id="download-all-btn" class="btn btn-success" disabled>Download All (ZIP)</button>
                 </div>
             </section>
         </div>
@@ -93,11 +98,14 @@
             <section class="card" aria-labelledby="compress-upload-title">
                 <h2 id="compress-upload-title" style="display:none;">Compressor Upload Area</h2>
                 <div id="compress-dropzone" class="dropzone">
-                    <div class="dropzone-icon">🗜️</div>
-                    <div class="dropzone-title">Drag & drop files to compress</div>
+                    <div class="dropzone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+                    </div>
+                    <div class="dropzone-title">Drag and drop files to compress</div>
                     <div class="dropzone-subtitle">Supports PDF, PNG, JPG, JPEG, WebP</div>
-                    <input type="file" id="compress-file-input" class="file-input" accept=".pdf,.jpg,.jpeg,.png,.webp" multiple>
                 </div>
+                <!-- File input placed outside to prevent event bubbling conflicts -->
+                <input type="file" id="compress-file-input" class="file-input" accept=".pdf,.jpg,.jpeg,.png,.webp" multiple>
             </section>
 
             <!-- Compression Slider Settings Card -->
@@ -121,8 +129,8 @@
                 <div class="queue-header">
                     <h2 id="compressor-queue-title" class="queue-title">Compressor Queue</h2>
                     <div class="controls">
-                        <button id="compress-all-btn" class="btn btn-primary" disabled>🗜️ Compress All</button>
-                        <button id="compress-clear-btn" class="btn btn-secondary" disabled>✖ Clear All</button>
+                        <button id="compress-all-btn" class="btn btn-primary" disabled>Compress All</button>
+                        <button id="compress-clear-btn" class="btn btn-secondary" disabled>Clear All</button>
                     </div>
                 </div>
 
@@ -133,21 +141,23 @@
 
                 <!-- Empty Queue Placeholder -->
                 <div id="compress-empty-queue" class="empty-queue">
-                    <div class="empty-queue-icon">📁</div>
+                    <div class="empty-queue-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
                     <div>Compressor queue is empty</div>
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Upload images or PDFs to begin compressing</div>
                 </div>
                 
                 <!-- Actions Footer -->
                 <div class="actions-bar">
-                    <button id="compress-download-all-btn" class="btn btn-success" disabled>📦 Download All (ZIP)</button>
+                    <button id="compress-download-all-btn" class="btn btn-success" disabled>Download All (ZIP)</button>
                 </div>
             </section>
         </div>
 
         <!-- Main Footer -->
         <footer class="main-footer">
-            <p>AeroPDF Converter & Compressor • Runs 100% locally & secure • No server storage</p>
+            <p>AeroPDF Converter and Compressor • Runs 100% locally and secure • No server storage</p>
         </footer>
     </div>
 
@@ -175,6 +185,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <!-- Prism Autoloader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <!-- jsPDF (explicitly loaded for PDF compression constructor) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <!-- html2pdf.js (Converts styled DOM nodes to PDF format, bundles jsPDF) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

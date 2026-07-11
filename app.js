@@ -42,9 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Theme Setup
 function setupTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
-    updateThemeToggleIcon(savedTheme);
 }
 
 function toggleTheme() {
@@ -52,33 +51,36 @@ function toggleTheme() {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     document.body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeToggleIcon(newTheme);
-}
-
-function updateThemeToggleIcon(theme) {
-    themeToggleBtn.innerHTML = theme === 'light' ? '🌙' : '☀️';
 }
 
 // Event Listeners
 function setupEventListeners() {
     themeToggleBtn.addEventListener('click', toggleTheme);
-    
+
     // Tabs Navigation
     tabConverter.addEventListener('click', () => switchTab('converter'));
     tabCompressor.addEventListener('click', () => switchTab('compressor'));
-    
+
     // --- PDF Converter Event Listeners ---
-    dropzone.addEventListener('click', () => fileInput.click());
-    
+    dropzone.addEventListener('click', (e) => {
+        if (e.target === fileInput) return;
+        fileInput.click();
+    });
+
+    // Prevent the click event from bubbling up to dropzone (resolves recursive explorer dialog loops)
+    fileInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
     dropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropzone.classList.add('dragover');
     });
-    
+
     dropzone.addEventListener('dragleave', () => {
         dropzone.classList.remove('dragover');
     });
-    
+
     dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropzone.classList.remove('dragover');
@@ -86,30 +88,38 @@ function setupEventListeners() {
             handleConverterFilesSelected(e.dataTransfer.files);
         }
     });
-    
+
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
             handleConverterFilesSelected(e.target.files);
             fileInput.value = ''; // Reset file input
         }
     });
-    
+
     convertAllBtn.addEventListener('click', convertAllFiles);
     downloadAllBtn.addEventListener('click', downloadAllFiles);
     clearAllBtn.addEventListener('click', clearAllFiles);
-    
+
     // --- Compressor Event Listeners ---
-    compressDropzone.addEventListener('click', () => compressFileInput.click());
-    
+    compressDropzone.addEventListener('click', (e) => {
+        if (e.target === compressFileInput) return;
+        compressFileInput.click();
+    });
+
+    // Prevent the click event from bubbling up to compressDropzone
+    compressFileInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
     compressDropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
         compressDropzone.classList.add('dragover');
     });
-    
+
     compressDropzone.addEventListener('dragleave', () => {
         compressDropzone.classList.remove('dragover');
     });
-    
+
     compressDropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         compressDropzone.classList.remove('dragover');
@@ -117,18 +127,18 @@ function setupEventListeners() {
             handleCompressFilesSelected(e.dataTransfer.files);
         }
     });
-    
+
     compressFileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
             handleCompressFilesSelected(e.target.files);
             compressFileInput.value = '';
         }
     });
-    
+
     compressionQuality.addEventListener('input', (e) => {
         qualityValDisplay.textContent = e.target.value + '%';
     });
-    
+
     compressAllBtn.addEventListener('click', compressAllFiles);
     compressDownloadAllBtn.addEventListener('click', compressDownloadAllFiles);
     compressClearBtn.addEventListener('click', compressClearAllFiles);
@@ -157,7 +167,7 @@ function handleConverterFilesSelected(files) {
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const ext = getFileExtension(file.name);
-        
+
         const fileId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         converterQueue.push({
             id: fileId,
@@ -183,23 +193,23 @@ function updateConverterUI() {
         clearAllBtn.disabled = true;
         return;
     }
-    
+
     emptyQueueElement.style.display = 'none';
     fileListContainer.style.display = 'flex';
     clearAllBtn.disabled = isConverting;
-    
+
     const hasConvertible = converterQueue.some(item => item.status === 'queued' || item.status === 'failed');
     convertAllBtn.disabled = !hasConvertible || isConverting;
-    
+
     const hasCompleted = converterQueue.some(item => item.status === 'completed' && item.pdfBlob);
     downloadAllBtn.disabled = !hasCompleted;
 
     fileListContainer.innerHTML = '';
-    
+
     converterQueue.forEach(item => {
         const fileItemHtml = `
             <div class="file-item" id="${item.id}">
-                <div class="file-icon">${getFileTypeEmoji(item.ext)}</div>
+                <div class="file-icon">${getFileTypeSVG(item.ext)}</div>
                 <div class="file-info">
                     <div class="file-name" title="${item.name}">${item.name}</div>
                     <div class="file-meta">
@@ -222,9 +232,13 @@ function updateConverterUI() {
                         ${item.status === 'failed' ? 'Failed' : ''}
                     </span>
                     ${item.status === 'completed' ? `
-                        <button class="btn btn-secondary btn-sm" onclick="downloadConverterFile('${item.id}')" title="Download PDF">📥</button>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadConverterFile('${item.id}')" title="Download PDF">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </button>
                     ` : ''}
-                    <button class="remove-btn" onclick="removeConverterFile('${item.id}')" ${isConverting ? 'disabled' : ''} title="Remove">✖</button>
+                    <button class="remove-btn" onclick="removeConverterFile('${item.id}')" ${isConverting ? 'disabled' : ''} title="Remove">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
                 </div>
             </div>
         `;
@@ -232,7 +246,7 @@ function updateConverterUI() {
     });
 }
 
-window.removeConverterFile = function(id) {
+window.removeConverterFile = function (id) {
     if (isConverting) return;
     converterQueue = converterQueue.filter(item => item.id !== id);
     updateConverterUI();
@@ -244,7 +258,7 @@ function clearAllFiles() {
     updateConverterUI();
 }
 
-window.downloadConverterFile = function(id) {
+window.downloadConverterFile = function (id) {
     const item = converterQueue.find(f => f.id === id);
     if (item && item.pdfBlob) {
         const url = URL.createObjectURL(item.pdfBlob);
@@ -261,19 +275,19 @@ window.downloadConverterFile = function(id) {
 async function downloadAllFiles() {
     const completedItems = converterQueue.filter(item => item.status === 'completed' && item.pdfBlob);
     if (completedItems.length === 0) return;
-    
+
     downloadAllBtn.disabled = true;
-    downloadAllBtn.innerHTML = '⚡ Packaging ZIP...';
-    
+    downloadAllBtn.innerHTML = 'Packaging ZIP...';
+
     try {
         const zip = new JSZip();
         completedItems.forEach(item => {
             const pdfName = item.name.substring(0, item.name.lastIndexOf('.')) + '.pdf';
             zip.file(pdfName, item.pdfBlob);
         });
-        
-        const zipBlob = await zip.generateAsync({type: 'blob'});
-        
+
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+
         const url = URL.createObjectURL(zipBlob);
         const a = document.createElement('a');
         a.href = url;
@@ -285,29 +299,29 @@ async function downloadAllFiles() {
     } catch (e) {
         alert("Error creating ZIP file: " + e.message);
     } finally {
-        downloadAllBtn.innerHTML = '📦 Download All (ZIP)';
+        downloadAllBtn.innerHTML = 'Download All (ZIP)';
         downloadAllBtn.disabled = false;
     }
 }
 
 async function convertAllFiles() {
     if (isConverting) return;
-    
+
     const itemsToConvert = converterQueue.filter(item => item.status === 'queued' || item.status === 'failed');
     if (itemsToConvert.length === 0) return;
-    
+
     isConverting = true;
     updateConverterUI();
-    
+
     for (let i = 0; i < itemsToConvert.length; i++) {
         const item = itemsToConvert[i];
         try {
             item.status = 'converting';
             item.progress = 10;
             updateConverterUI();
-            
+
             const pdfBlob = await performConversion(item);
-            
+
             item.status = 'completed';
             item.progress = 100;
             item.pdfBlob = pdfBlob;
@@ -320,7 +334,7 @@ async function convertAllFiles() {
         }
         updateConverterUI();
     }
-    
+
     isConverting = false;
     updateConverterUI();
 }
@@ -328,12 +342,12 @@ async function convertAllFiles() {
 async function performConversion(item) {
     const file = item.file;
     const ext = item.ext;
-    
+
     let htmlContent = '';
-    
+
     item.progress = 30;
     updateConverterUI();
-    
+
     if (['docx', 'doc'].includes(ext)) {
         const arrayBuffer = await readFileAsArrayBuffer(file);
         item.progress = 50;
@@ -372,29 +386,29 @@ async function performConversion(item) {
     } else {
         throw new Error(`Unsupported file type: .${ext}`);
     }
-    
+
     item.progress = 70;
     updateConverterUI();
-    
+
     printTemplate.innerHTML = `<div class="print-page">${htmlContent}</div>`;
     Prism.highlightAllUnder(printTemplate);
-    
+
     await delay(300);
-    
+
     item.progress = 85;
     updateConverterUI();
-    
+
     const cleanFileName = item.name.substring(0, item.name.lastIndexOf('.')) + '.pdf';
-    
+
     const opt = {
-        margin:       10,
-        filename:     cleanFileName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, logging: false },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['css', 'legacy'] }
+        margin: 10,
+        filename: cleanFileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
     };
-    
+
     const pdfBlob = await html2pdf().set(opt).from(printTemplate).output('blob');
     printTemplate.innerHTML = '';
     return pdfBlob;
@@ -408,12 +422,12 @@ function handleCompressFilesSelected(files) {
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const ext = getFileExtension(file.name);
-        
+
         if (!['pdf', 'png', 'jpg', 'jpeg', 'webp'].includes(ext)) {
             alert(`File "${file.name}" is not supported for compression. Upload PDFs or images.`);
             continue;
         }
-        
+
         const fileId = 'comp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         compressQueue.push({
             id: fileId,
@@ -440,30 +454,30 @@ function updateCompressorUI() {
         compressClearBtn.disabled = true;
         return;
     }
-    
+
     compressEmptyQueue.style.display = 'none';
     compressFileList.style.display = 'flex';
     compressClearBtn.disabled = isCompressing;
-    
+
     const hasCompressible = compressQueue.some(item => item.status === 'queued' || item.status === 'failed');
     compressAllBtn.disabled = !hasCompressible || isCompressing;
-    
+
     const hasCompleted = compressQueue.some(item => item.status === 'completed' && item.compressedBlob);
     compressDownloadAllBtn.disabled = !hasCompleted;
 
     compressFileList.innerHTML = '';
-    
+
     compressQueue.forEach(item => {
         const hasSavings = item.status === 'completed' && item.compressedSize !== null;
         let savingsPercent = 0;
         if (hasSavings && item.originalSize > 0) {
             savingsPercent = Math.round(((item.originalSize - item.compressedSize) / item.originalSize) * 100);
-            if (savingsPercent < 0) savingsPercent = 0; // Prevent negative savings if size slightly increased
+            if (savingsPercent < 0) savingsPercent = 0;
         }
 
         const fileItemHtml = `
             <div class="file-item" id="${item.id}">
-                <div class="file-icon">${getFileTypeEmoji(item.ext)}</div>
+                <div class="file-icon">${getFileTypeSVG(item.ext)}</div>
                 <div class="file-info">
                     <div class="file-name" title="${item.name}">${item.name}</div>
                     <div class="file-meta">
@@ -491,9 +505,13 @@ function updateCompressorUI() {
                         ${item.status === 'failed' ? 'Failed' : ''}
                     </span>
                     ${item.status === 'completed' ? `
-                        <button class="btn btn-secondary btn-sm" onclick="downloadCompressedFile('${item.id}')" title="Download Compressed File">📥</button>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadCompressedFile('${item.id}')" title="Download Compressed File">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </button>
                     ` : ''}
-                    <button class="remove-btn" onclick="removeCompressorFile('${item.id}')" ${isCompressing ? 'disabled' : ''} title="Remove">✖</button>
+                    <button class="remove-btn" onclick="removeCompressorFile('${item.id}')" ${isCompressing ? 'disabled' : ''} title="Remove">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
                 </div>
             </div>
         `;
@@ -501,7 +519,7 @@ function updateCompressorUI() {
     });
 }
 
-window.removeCompressorFile = function(id) {
+window.removeCompressorFile = function (id) {
     if (isCompressing) return;
     compressQueue = compressQueue.filter(item => item.id !== id);
     updateCompressorUI();
@@ -513,18 +531,17 @@ function compressClearAllFiles() {
     updateCompressorUI();
 }
 
-window.downloadCompressedFile = function(id) {
+window.downloadCompressedFile = function (id) {
     const item = compressQueue.find(f => f.id === id);
     if (item && item.compressedBlob) {
         const url = URL.createObjectURL(item.compressedBlob);
         const a = document.createElement('a');
         a.href = url;
-        
-        // Output compressed extensions
+
         const dotIdx = item.name.lastIndexOf('.');
         const nameNoExt = item.name.substring(0, dotIdx);
-        const outExt = item.ext === 'pdf' ? 'pdf' : 'jpg'; // images export to JPG
-        
+        const outExt = item.ext === 'pdf' ? 'pdf' : 'jpg';
+
         a.download = `${nameNoExt}_compressed.${outExt}`;
         document.body.appendChild(a);
         a.click();
@@ -533,19 +550,13 @@ window.downloadCompressedFile = function(id) {
     }
 };
 
-async function compressClearAllFiles() {
-    if (isCompressing) return;
-    compressQueue = [];
-    updateCompressorUI();
-}
-
 async function compressDownloadAllFiles() {
     const completedItems = compressQueue.filter(item => item.status === 'completed' && item.compressedBlob);
     if (completedItems.length === 0) return;
-    
+
     compressDownloadAllBtn.disabled = true;
-    compressDownloadAllBtn.innerHTML = '⚡ Packaging ZIP...';
-    
+    compressDownloadAllBtn.innerHTML = 'Packaging ZIP...';
+
     try {
         const zip = new JSZip();
         completedItems.forEach(item => {
@@ -553,12 +564,12 @@ async function compressDownloadAllFiles() {
             const nameNoExt = item.name.substring(0, dotIdx);
             const outExt = item.ext === 'pdf' ? 'pdf' : 'jpg';
             const compName = `${nameNoExt}_compressed.${outExt}`;
-            
+
             zip.file(compName, item.compressedBlob);
         });
-        
-        const zipBlob = await zip.generateAsync({type: 'blob'});
-        
+
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+
         const url = URL.createObjectURL(zipBlob);
         const a = document.createElement('a');
         a.href = url;
@@ -570,37 +581,37 @@ async function compressDownloadAllFiles() {
     } catch (e) {
         alert("Error creating ZIP file: " + e.message);
     } finally {
-        compressDownloadAllBtn.innerHTML = '📦 Download All (ZIP)';
+        compressDownloadAllBtn.innerHTML = 'Download All (ZIP)';
         compressDownloadAllBtn.disabled = false;
     }
 }
 
 async function compressAllFiles() {
     if (isCompressing) return;
-    
+
     const itemsToCompress = compressQueue.filter(item => item.status === 'queued' || item.status === 'failed');
     if (itemsToCompress.length === 0) return;
-    
+
     isCompressing = true;
     updateCompressorUI();
-    
-    const qualityVal = parseInt(compressionQuality.value) / 100; // e.g. 60% quality -> 0.6 quality value
-    
+
+    const qualityVal = parseInt(compressionQuality.value) / 100;
+
     for (let i = 0; i < itemsToCompress.length; i++) {
         const item = itemsToCompress[i];
         try {
             item.status = 'converting';
             item.progress = 15;
             updateCompressorUI();
-            
+
             let compressedBlob;
-            
+
             if (item.ext === 'pdf') {
                 compressedBlob = await runPdfCompression(item, qualityVal);
             } else {
                 compressedBlob = await runImageCompression(item, qualityVal);
             }
-            
+
             item.status = 'completed';
             item.progress = 100;
             item.compressedBlob = compressedBlob;
@@ -614,7 +625,7 @@ async function compressAllFiles() {
         }
         updateCompressorUI();
     }
-    
+
     isCompressing = false;
     updateCompressorUI();
 }
@@ -624,15 +635,14 @@ async function runImageCompression(item, quality) {
     return new Promise((resolve, reject) => {
         const file = item.file;
         const reader = new FileReader();
-        
-        reader.onload = function(event) {
+
+        reader.onload = function (event) {
             const img = new Image();
-            img.onload = function() {
-                // Determine scale sizes to prevent massive memory limits
+            img.onload = function () {
                 const maxDim = 2048;
                 let width = img.width;
                 let height = img.height;
-                
+
                 if (width > maxDim || height > maxDim) {
                     if (width > height) {
                         height = Math.round((height * maxDim) / width);
@@ -642,21 +652,19 @@ async function runImageCompression(item, quality) {
                         height = maxDim;
                     }
                 }
-                
+
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 canvas.width = width;
                 canvas.height = height;
-                
-                // Draw white background (especially helpful if PNG transparent colors turn black)
+
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, width, height);
                 ctx.drawImage(img, 0, 0, width, height);
-                
+
                 item.progress = 75;
                 updateCompressorUI();
-                
-                // Export as JPEG with specified quality
+
                 canvas.toBlob((blob) => {
                     if (blob) {
                         resolve(blob);
@@ -677,40 +685,35 @@ async function runImageCompression(item, quality) {
 async function runPdfCompression(item, quality) {
     const file = item.file;
     const arrayBuffer = await readFileAsArrayBuffer(file);
-    
-    // Setup PDF.js worker
+
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    
-    const loadingTask = pdfjsLib.getDocument({data: new Uint8Array(arrayBuffer)});
+
+    const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) });
     const pdf = await loadingTask.promise;
-    
+
     const jsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
     let doc;
-    
+
     const totalPages = pdf.numPages;
-    // Map compression quality slider to viewport rendering scale
-    // quality range is 0.1 to 1.0. Quality 0.6 maps to 1.25 scale (good readable size)
-    const scale = 0.5 + (quality * 1.25); 
-    
+    const scale = 0.5 + (quality * 1.25);
+
     for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-        // Update page increments progress
         item.progress = Math.round(15 + ((pageNum - 1) / totalPages) * 75);
         updateCompressorUI();
-        
+
         const page = await pdf.getPage(pageNum);
         const viewport = page.getViewport({ scale: scale });
-        
+
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         canvas.height = viewport.height;
         canvas.width = viewport.width;
-        
+
         await page.render({ canvasContext: context, viewport: viewport }).promise;
-        
-        // Convert page render to compressed jpeg image data
+
         const imgData = canvas.toDataURL('image/jpeg', quality);
         const orientation = viewport.width > viewport.height ? 'l' : 'p';
-        
+
         if (pageNum === 1) {
             doc = new jsPDF({
                 orientation: orientation,
@@ -720,13 +723,13 @@ async function runPdfCompression(item, quality) {
         } else {
             doc.addPage([viewport.width, viewport.height], orientation);
         }
-        
+
         doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height);
     }
-    
+
     item.progress = 95;
     updateCompressorUI();
-    
+
     const outputBlob = doc.output('blob');
     return outputBlob;
 }
@@ -764,6 +767,85 @@ function readFileAsDataURL(file) {
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
+function getFileExtension(filename) {
+    return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
+}
+
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+// Render dynamic colored vector document icon representing file type
+function getFileTypeSVG(ext) {
+    const defaultColor = '#4b5563';
+    const colors = {
+        'docx': '#2563eb', 'doc': '#2563eb',
+        'xlsx': '#16a34a', 'xls': '#16a34a',
+        'ipynb': '#d97706',
+        'png': '#db2777', 'jpg': '#db2777', 'jpeg': '#db2777', 'webp': '#db2777', 'gif': '#db2777', 'bmp': '#db2777',
+        'md': '#111827',
+        'txt': '#4b5563', 'log': '#4b5563',
+        'csv': '#0284c7',
+        'pdf': '#dc2626'
+    };
+
+    let color = colors[ext] || defaultColor;
+    if (['py', 'js', 'json', 'css', 'html', 'cpp', 'java', 'go', 'rs', 'cs', 'sh', 'yaml', 'yml', 'xml'].includes(ext)) {
+        color = '#7c3aed';
+    }
+
+    return `
+        <svg viewBox="0 0 24 24" width="32" height="32" stroke="${color}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" class="file-svg-icon" style="display: block;">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+    `;
+}
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function getPrismLanguageClass(ext) {
+    const map = {
+        'js': 'language-javascript',
+        'jsx': 'language-javascript',
+        'ts': 'language-typescript',
+        'tsx': 'language-typescript',
+        'py': 'language-python',
+        'html': 'language-html',
+        'css': 'language-css',
+        'json': 'language-json',
+        'md': 'language-markdown',
+        'cpp': 'language-cpp',
+        'c': 'language-c',
+        'java': 'language-java',
+        'cs': 'language-csharp',
+        'go': 'language-go',
+        'rs': 'language-rust',
+        'sh': 'language-bash',
+        'bat': 'language-batch',
+        'sql': 'language-sql',
+        'yaml': 'language-yaml',
+        'yml': 'language-yaml',
+        'xml': 'language-xml'
+    };
+    return map[ext] || 'language-none';
+}
+
 // Format Parsers - Word Document
 async function renderWord(arrayBuffer) {
     try {
@@ -783,16 +865,16 @@ async function renderExcel(arrayBuffer, ext) {
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
         let html = '<div class="excel-print">';
-        
+
         workbook.SheetNames.forEach((sheetName, index) => {
             const worksheet = workbook.Sheets[sheetName];
             const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1:A1');
             const isEmpty = !worksheet['!ref'] || (range.s.r === range.e.r && range.s.c === range.e.c && !worksheet[XLSX.utils.encode_cell(range.s)]);
-            
+
             const pageBreakClass = index > 0 ? 'page-break' : '';
             html += `<div class="sheet-container ${pageBreakClass}">`;
             html += `<h2>Sheet: ${sheetName}</h2>`;
-            
+
             if (isEmpty) {
                 html += `<p style="color: #666; font-style: italic;">Empty sheet.</p>`;
             } else {
@@ -804,7 +886,7 @@ async function renderExcel(arrayBuffer, ext) {
             }
             html += '</div>';
         });
-        
+
         html += '</div>';
         return html;
     } catch (e) {
@@ -817,28 +899,28 @@ function renderNotebook(ipynbText) {
     try {
         const notebook = JSON.parse(ipynbText);
         let html = '<div class="ipynb-print">';
-        html += `<h2 style="font-family: 'Outfit', sans-serif; border-bottom: 2px solid #ea580c; padding-bottom: 5px; margin-bottom: 20px;">Jupyter Notebook</h2>`;
-        
+        html += `<h2 style="font-family: 'Outfit', sans-serif; border-bottom: 2px solid #047857; padding-bottom: 5px; margin-bottom: 20px;">Jupyter Notebook</h2>`;
+
         const cells = notebook.cells || [];
         if (cells.length === 0) {
             html += '<p style="color: #666; font-style: italic;">Empty Notebook</p>';
         }
-        
+
         cells.forEach((cell) => {
             const cellType = cell.cell_type;
             const source = Array.isArray(cell.source) ? cell.source.join('') : cell.source || '';
             html += '<div class="ipynb-cell">';
-            
+
             if (cellType === 'markdown') {
                 const mdHtml = marked.parse(source);
                 html += `<div class="ipynb-markdown">${mdHtml}</div>`;
             } else if (cellType === 'code') {
                 const executionCount = cell.execution_count !== null && cell.execution_count !== undefined ? cell.execution_count : ' ';
                 html += `<div class="ipynb-cell-prompt">In [${executionCount}]:</div>`;
-                
+
                 const escapedCode = escapeHtml(source);
                 html += `<pre class="ipynb-input"><code class="language-python">${escapedCode}</code></pre>`;
-                
+
                 const outputs = cell.outputs || [];
                 if (outputs.length > 0) {
                     outputs.forEach(output => {
@@ -864,7 +946,7 @@ function renderNotebook(ipynbText) {
             }
             html += '</div>';
         });
-        
+
         html += '</div>';
         return html;
     } catch (e) {
