@@ -56,7 +56,7 @@ class TextConverter(BaseConverter):
             body_html = content
         else:
             # Escape text
-            escaped = content.replace('&', '&amp;').replace('<', '&lt;').replace(>', '&gt;').replace('\n', '<br/>')
+            escaped = content.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>')
             body_html = f"<pre>{escaped}</pre>"
 
         full_html = f"""<!DOCTYPE html>
@@ -102,7 +102,7 @@ class TextConverter(BaseConverter):
                 continue
                 
             if in_code:
-                html_lines.append(stripped.replace('&', '&amp;').replace('<', '&lt;').replace(>', '&gt;') + "\n")
+                html_lines.append(stripped.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;') + "\n")
                 continue
 
             # Headers
@@ -163,7 +163,7 @@ class TextConverter(BaseConverter):
 
         for line in content.splitlines():
             # Escape HTML characters for ReportLab Paragraph rendering
-            escaped = line.replace('&', '&amp;').replace('<', '&lt;').replace(>', '&gt;').replace(' ', '&nbsp;')
+            escaped = line.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(' ', '&nbsp;')
             if not escaped.strip():
                 story.append(Spacer(1, 10))
             else:
@@ -206,7 +206,7 @@ class TextConverter(BaseConverter):
                 continue
 
             if in_code:
-                escaped = stripped.replace('&', '&amp;').replace('<', '&lt;').replace(>', '&gt;').replace(' ', '&nbsp;')
+                escaped = stripped.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(' ', '&nbsp;')
                 code_buffer.append(escaped)
                 continue
 

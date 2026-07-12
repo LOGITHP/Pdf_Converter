@@ -22,6 +22,7 @@ class ConversionRouter:
             MetadataEngine(),
             OCREngine(),
             PDFConverter(),
+            ImageConverter(),
             OfficeConverter(),
             SheetConverter(),
             SlidesConverter(),

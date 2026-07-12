@@ -1,0 +1,16 @@
+2026-07-12 19:41:01,465 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 19:41:01,473 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 19:41:01,528 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 19:41:38,966 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 19:41:38,973 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 19:41:39,029 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 19:42:56,882 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-12 19:42:56,951 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-12 19:49:01,318 [INFO] job_manager: Starting background job: 9b390255-504a-4b06-9a10-aee1c513b4c3
+2026-07-12 19:49:01,318 [INFO] router: Routing .jpg -> .pdf to ImageConverter
+2026-07-12 19:49:01,318 [INFO] image_converter: Converting image: C:\Users\logit\Downloads\pdfconverter\backend\temp\input_05eabb2c_black-white-scene-great-wall-china.jpg -> C:\Users\logit\Downloads\pdfconverter\backend\output\converted_3c51e07c_black-white-scene-great-wall-china.pdf
+2026-07-12 19:49:01,527 [INFO] job_manager: Background job completed successfully: 9b390255-504a-4b06-9a10-aee1c513b4c3
+2026-07-12 19:49:33,394 [INFO] job_manager: Starting background job: 0b7c1860-29ab-4d01-96fb-174908a61371
+2026-07-12 19:49:33,401 [INFO] router: Routing .docx -> .pdf to OfficeConverter
+2026-07-12 19:49:33,462 [WARNING] office_converter: LibreOffice not detected. Falling back to Python libraries.
+2026-07-12 19:49:34,227 [INFO] job_manager: Background job completed successfully: 0b7c1860-29ab-4d01-96fb-174908a61371
