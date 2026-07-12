@@ -1,77 +1,105 @@
-# AeroPDF: Client-Side PDF Converter and Compressor
+# AeroPDF Universal: Offline Document Converter & PDF Toolkit
 
-AeroPDF is a premium, client-side web application designed to convert and compress documents locally in the browser. Because all processing occurs directly within the client environment, files are never uploaded to a remote server. This architecture guarantees absolute data privacy, rapid conversion speeds, and offline functionality.
+AeroPDF Universal is a professional, privacy-first, offline Universal Document Converter and PDF editing toolkit. The application runs entirely on your local machine using a **FastAPI backend** (Python) and a **React + Tailwind CSS frontend** served locally. 
 
-The application has no system dependencies (such as Microsoft Office, LibreOffice, or other native runtime environments) and is fully compatible with Windows, Linux, macOS, Android, and iOS.
-
----
-
-## Technical Specifications and Features
-
-### 1. Document Converter
-AeroPDF converts several common file formats into high-fidelity PDF documents:
-* **Microsoft Word (DOCX, DOC)**: Parses document elements and formats locally to render readable HTML.
-* **Microsoft Excel (XLSX, XLS)**: Generates structured, clean tables for each worksheet, separating tabs with explicit page breaks.
-* **Jupyter Notebooks (IPYNB)**: Renders markdown notes, input source cells with Python syntax highlighting, standard outputs, and graphical plots (such as Matplotlib/Seaborn figures represented as base64 images).
-* **Markdown (MD)**: Parses standard markdown elements into styled, reader-oriented document layouts.
-* **Source Code (PY, JS, JSON, CSS, HTML, etc.)**: Highlights code syntax using Prism.js with automatic line-wrapping to prevent page clipping.
-* **CSV Files**: Decodes structured data grids into styled tables with borders and padded cells.
-* **Plain Text (TXT, LOG)**: Formats logs and raw text into clean monospace document viewports.
-* **Images (PNG, JPG, JPEG, WEBP, BMP)**: Scales images to fit standard A4 paper dimensions.
-
-### 2. File Compressor
-AeroPDF optimizes image and PDF file sizes locally:
-* **Image Compression (JPG, PNG, WEBP)**: Redraws uploaded images to canvas viewports, restricts maximum dimensions to 2048px to prevent browser memory exhaustion, and exports them to JPEG format at a user-defined compression quality (ranging from 10% to 100%). Transparent PNG assets are automatically overlayed on a white background to avoid rendering artifacts.
-* **PDF Compression**: Extracts pages from an uploaded PDF, renders them individually to canvas elements using PDF.js while maintaining original layout aspect ratios, applies JPEG compression, and compiles the compressed pages into a new PDF document.
-* **Real-time Metrics**: Displays the original size, the optimized size, and the exact percentage of storage saved.
+Files are never uploaded to the cloud, ensuring absolute confidentiality, maximum security, and high performance.
 
 ---
 
-## Local Setup and Installation
+## 🌟 Key Features
 
-AeroPDF can run by opening the index.html file directly in any modern browser, or by serving it locally. Serving the files ensures consistent caching behavior and makes it easy to share the tool across a local network.
+1. **Document Conversion**:
+   - **Office Formats**: Converts Word (`.docx`, `.doc`, `.odt`), Excel (`.xlsx`, `.xls`, `.ods`, `.csv`), and PowerPoint (`.pptx`, `.ppt`, `.odp`) to PDF, HTML, or text formats.
+   - **Jupyter Notebooks**: Converts `.ipynb` files to PDF, HTML, Markdown, or raw Python, complete with syntax highlighting and base64 embedded graphs.
+   - **Source Code**: Renders programming source files (`.py`, `.js`, `.json`, `.cpp`, `.java`, etc.) into beautifully styled PDFs with line numbers and Pygments syntax highlighting.
+   - **Markdown & Text**: Transforms Markdown (`.md`) or plain logs (`.txt`, `.log`) into clear PDF or HTML views.
+   - **Images**: Scales and wraps image files (`.png`, `.jpg`, `.webp`, `.heic`) into standard A4 PDF pages.
 
-### Option A: Using the Python Server (Recommended)
-Run the built-in python script to launch the local web server:
-```bash
-python server.py
+2. **File Compression**:
+   - **Image Compressor**: Downscales resolution and optimizes quality levels (10% to 100%) for JPG, PNG, and WebP assets.
+   - **PDF Compressor**: Reduces PDF sizes by executing structural optimization, image downsampling, and metadata clearing.
+
+3. **PDF Editing Toolkit**:
+   - **Merge**: Combines multiple PDF files in order into a single document.
+   - **Split**: Extracts pages of a PDF into individual page files.
+   - **Rotate**: Rotates PDF page views (90°, 180°, 270°).
+   - **Watermark**: Injects customizable text watermarks diagonally across pages with custom opacity.
+   - **Encrypt & Decrypt**: Protects PDFs with password protection or removes password locks.
+
+4. **Local OCR (Text Recognition)**:
+   - Recognizes text within scans or images using local Tesseract OCR and generates searchable PDF documents.
+
+5. **Metadata Engine**:
+   - View, extract, or edit EXIF metadata and PDF description tags (Author, Creator, Keywords, Copyright) offline.
+
+---
+
+## ⚙️ System Dependencies
+
+For high-fidelity conversions and advanced features, the application dynamically scans your system PATH:
+- **LibreOffice Headless**: Needed for high-fidelity conversion of Microsoft Office files. If missing, the app falls back to basic Python library layout parsers (Mammoth & python-docx).
+- **Tesseract OCR**: Needed to extract text from images and compile searchable PDFs. If missing, OCR functions will display fallback alerts in the UI.
+
+---
+
+## 📂 Project Structure
+
 ```
-This script starts a local server on port 8000 (or the next available port) and automatically opens the application in your default browser.
-
-### Option B: Using Node.js
-Alternatively, serve the static workspace directory using npm:
-```bash
-npx serve .
+UniversalConverter/
+├── backend/
+│   ├── api/            # FastAPI REST endpoints
+│   ├── router/         # File type conversion router
+│   ├── workers/        # Asynchronous job manager queue
+│   ├── converters/     # Specific file engines (pdf, office, notebook, code, etc.)
+│   ├── utils/          # System checking and file cleanup utilities
+│   ├── temp/           # Intermediate staging files
+│   └── output/         # Completed conversion downloads
+├── frontend/
+│   ├── src/            # React + Tailwind components
+│   └── dist/           # Compiled production static assets
+├── tests/              # Backend and routing unit tests
+├── requirements.txt    # Python package requirements
+└── main.py             # Server launcher script
 ```
 
 ---
 
-## Deployment and Hosting
+## 🚀 Local Setup and Startup
 
-Because AeroPDF is a static client-side application, it does not require a database or backend host. You can host it on any static hosting platform.
+### 1. Python Server Dependencies
+Install python packages from the root workspace folder:
+```bash
+pip install -r requirements.txt
+```
 
-### Hosting on GitHub Pages
-1. Initialize a git repository and commit your files:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial release of AeroPDF"
-   ```
-2. Create a repository on GitHub and push your local commits.
-3. In your GitHub repository:
-   * Go to **Settings** > **Pages**.
-   * Under **Build and deployment**, select **Deploy from a branch**.
-   * Select your deployment branch (e.g., `main` or `master`) and directory `/ (root)`.
-   * Click **Save**.
-4. The application will be live at `https://<username>.github.io/<repository-name>/` in a few minutes.
+### 2. Launch the Application
+Run the root launcher script:
+```bash
+python main.py
+```
+This script will:
+- Initialize the FastAPI server on port 8000 (or next available).
+- Start a background cleanup daemon to purge intermediate temp files.
+- Automatically serve the React static assets from `frontend/dist/`.
+- Open your default web browser automatically to `http://localhost:8000`.
+
+### 3. Developer Mode (Frontend Hot Reloading)
+To modify the React user interface with live reloading:
+- Navigate to the frontend directory:
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  ```
+- Open `http://localhost:5173` in your browser. The frontend automatically routes its requests to the FastAPI backend running on port 8000.
+- When done, compile the final production build:
+  ```bash
+  npm run build
+  ```
 
 ---
 
-## Core Libraries Used
-* **PDF Generation**: html2pdf.js (bundles html2canvas and jsPDF)
-* **Word Processing**: Mammoth.js (client-side DOCX parser)
-* **Spreadsheet Processing**: SheetJS (xlsx.full.min.js)
-* **PDF Processing**: PDF.js (Mozilla PDF reader engine)
-* **Syntax Highlighting**: Prism.js (with Autoloader plugin)
-* **Markdown Parsing**: Marked.js
-* **Batch Zipping**: JSZip (client-side ZIP compiler)
+## 🛡️ Security & Privacy
+- **100% Local**: No network requests are made outside your machine.
+- **Zero Database**: Conversions are processed in-memory and in staging folders.
+- **Self-Cleaning**: Staging folders are swept clean periodically and upon server shutdown.
