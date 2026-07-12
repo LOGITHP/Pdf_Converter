@@ -2,7 +2,7 @@ import os
 import subprocess
 import logging
 from backend.converters.base import BaseConverter
-from backend.utils.sys_info import get_libreoffice_path
+from backend.utils import sys_info
 
 logger = logging.getLogger("office_converter")
 
@@ -17,20 +17,18 @@ class OfficeConverter(BaseConverter):
         return False
 
     def is_available(self) -> bool:
-        # It's always "available" because it has a Python-only fallback for .docx
-        return True
+        return sys_info.get_engine_path("libreoffice") is not None
 
     def convert(self, input_path: str, output_path: str, options: dict = None) -> bool:
         from_ext = os.path.splitext(input_path)[1].lower().strip('.')
         to_ext = os.path.splitext(output_path)[1].lower().strip('.')
 
         # Check for LibreOffice first (best quality)
-        lo_path = get_libreoffice_path()
-        if lo_path:
-            return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
+        lo_path = sys_info.get_engine_path("libreoffice")
+        if not lo_path:
+            raise RuntimeError("The application installation is corrupted. Please reinstall.")
 
-        # Fallbacks when LibreOffice is not available
-        logger.warning("LibreOffice not detected. Falling back to Python libraries.")
+        return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
         
         if from_ext == "docx":
             if to_ext == "txt":

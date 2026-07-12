@@ -3,7 +3,7 @@ import subprocess
 import logging
 import pandas as pd
 from backend.converters.base import BaseConverter
-from backend.utils.sys_info import get_libreoffice_path
+from backend.utils import sys_info
 
 logger = logging.getLogger("sheet_converter")
 
@@ -17,7 +17,7 @@ class SheetConverter(BaseConverter):
         return False
 
     def is_available(self) -> bool:
-        return True
+        return sys_info.get_engine_path("libreoffice") is not None
 
     def convert(self, input_path: str, output_path: str, options: dict = None) -> bool:
         from_ext = os.path.splitext(input_path)[1].lower().strip('.')
@@ -30,14 +30,12 @@ class SheetConverter(BaseConverter):
             return self._csv_to_xlsx(input_path, output_path)
 
         # Check for LibreOffice (best quality for PDF)
-        lo_path = get_libreoffice_path()
+        lo_path = sys_info.get_engine_path("libreoffice")
+        if not lo_path and to_ext == "pdf":
+            raise RuntimeError("The application installation is corrupted. Please reinstall.")
+
         if lo_path and to_ext == "pdf":
             return self._convert_with_libreoffice(lo_path, input_path, output_path)
-
-        # Fallback PDF conversion if LibreOffice is missing
-        if to_ext == "pdf":
-            logger.warning("LibreOffice not detected. Using ReportLab + Pandas Excel PDF fallback.")
-            return self._sheet_to_pdf_fallback(input_path, output_path)
 
         raise RuntimeError(f"Unsupported spreadsheet conversion: .{from_ext} -> .{to_ext}")
 

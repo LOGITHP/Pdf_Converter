@@ -1,0 +1,26 @@
+# Portable binary runtimes (should not be committed to GitHub)
+runtime/
+
+# Python cache & logs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+backend/logs/*.log
+backend/temp/
+backend/output/
+
+# Frontend packages & production distribution
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# IDE configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

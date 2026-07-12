@@ -14,9 +14,16 @@ from backend.converters.notebooks.notebook_converter import NotebookConverter
 from backend.converters.code.code_converter import CodeConverter
 from backend.converters.text.text_converter import TextConverter
 
+from unittest.mock import patch
+
 class TestRouter(unittest.TestCase):
     def setUp(self):
         self.router = ConversionRouter()
+        self.patcher = patch("backend.utils.sys_info.get_engine_path", return_value="mock_path")
+        self.patcher.start()
+
+    def tearDown(self):
+        self.patcher.stop()
 
     def test_office_routing(self):
         conv, name = self.router.get_converter("docx", "pdf")

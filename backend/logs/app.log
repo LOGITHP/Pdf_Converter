@@ -14,3 +14,122 @@
 2026-07-12 19:49:33,401 [INFO] router: Routing .docx -> .pdf to OfficeConverter
 2026-07-12 19:49:33,462 [WARNING] office_converter: LibreOffice not detected. Falling back to Python libraries.
 2026-07-12 19:49:34,227 [INFO] job_manager: Background job completed successfully: 0b7c1860-29ab-4d01-96fb-174908a61371
+2026-07-12 19:55:26,218 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 19:55:26,234 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 19:55:26,246 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 19:55:53,629 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 19:55:53,638 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 19:55:53,644 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 19:57:03,642 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-12 19:57:03,715 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-12 19:59:02,084 [INFO] job_manager: Starting background job: 7c2024c5-da84-46e6-95d9-09fda64070b7
+2026-07-12 19:59:02,092 [INFO] router: Routing .docx -> .pdf to OfficeConverter
+2026-07-12 19:59:02,092 [INFO] office_converter: Converting using LibreOffice: C:\Users\logit\Downloads\pdfconverter\backend\temp\input_3e8871ce_problems.docx -> pdf
+2026-07-12 19:59:02,753 [ERROR] job_manager: Error in background job 7c2024c5-da84-46e6-95d9-09fda64070b7: [WinError 216] This version of %1 is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher
+Traceback (most recent call last):
+  File "C:\Users\logit\Downloads\pdfconverter\backend\workers\job_manager.py", line 63, in _run_task_wrapper
+    result_file, engine = func(job_id, *args, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\api\endpoints.py", line 87, in run_conversion
+    raise err
+  File "C:\Users\logit\Downloads\pdfconverter\backend\api\endpoints.py", line 76, in run_conversion
+    engine_name = conversion_router.convert_file(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\router\router.py", line 90, in convert_file
+    success = conv.convert(input_path, output_path, options)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\converters\office\office_converter.py", line 31, in convert
+    return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\converters\office\office_converter.py", line 72, in _convert_with_libreoffice
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 216] This version of %1 is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher
+2026-07-12 19:59:06,518 [INFO] job_manager: Starting background job: 9d152672-a907-4a0b-8364-a17296e6da44
+2026-07-12 19:59:06,547 [INFO] router: Routing .docx -> .pdf to OfficeConverter
+2026-07-12 19:59:06,559 [INFO] office_converter: Converting using LibreOffice: C:\Users\logit\Downloads\pdfconverter\backend\temp\input_7d883af9_problems.docx -> pdf
+2026-07-12 19:59:06,573 [ERROR] job_manager: Error in background job 9d152672-a907-4a0b-8364-a17296e6da44: [WinError 216] This version of %1 is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher
+Traceback (most recent call last):
+  File "C:\Users\logit\Downloads\pdfconverter\backend\workers\job_manager.py", line 63, in _run_task_wrapper
+    result_file, engine = func(job_id, *args, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\api\endpoints.py", line 87, in run_conversion
+    raise err
+  File "C:\Users\logit\Downloads\pdfconverter\backend\api\endpoints.py", line 76, in run_conversion
+    engine_name = conversion_router.convert_file(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\router\router.py", line 90, in convert_file
+    success = conv.convert(input_path, output_path, options)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\converters\office\office_converter.py", line 31, in convert
+    return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\converters\office\office_converter.py", line 72, in _convert_with_libreoffice
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 216] This version of %1 is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher
+2026-07-12 19:59:09,861 [INFO] job_manager: Starting background job: b91d02cd-9e9a-4ee1-b5c8-acd35359d3b8
+2026-07-12 19:59:09,883 [INFO] router: Routing .docx -> .pdf to OfficeConverter
+2026-07-12 19:59:09,890 [INFO] office_converter: Converting using LibreOffice: C:\Users\logit\Downloads\pdfconverter\backend\temp\input_bac3ea6f_problems.docx -> pdf
+2026-07-12 19:59:09,926 [ERROR] job_manager: Error in background job b91d02cd-9e9a-4ee1-b5c8-acd35359d3b8: [WinError 216] This version of %1 is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher
+Traceback (most recent call last):
+  File "C:\Users\logit\Downloads\pdfconverter\backend\workers\job_manager.py", line 63, in _run_task_wrapper
+    result_file, engine = func(job_id, *args, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\api\endpoints.py", line 87, in run_conversion
+    raise err
+  File "C:\Users\logit\Downloads\pdfconverter\backend\api\endpoints.py", line 76, in run_conversion
+    engine_name = conversion_router.convert_file(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\router\router.py", line 90, in convert_file
+    success = conv.convert(input_path, output_path, options)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\converters\office\office_converter.py", line 31, in convert
+    return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\Downloads\pdfconverter\backend\converters\office\office_converter.py", line 72, in _convert_with_libreoffice
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\logit\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 216] This version of %1 is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher
+2026-07-12 20:01:40,230 [INFO] job_manager: Starting background job: 38e0b055-1d67-4844-a3b0-a858f512f242
+2026-07-12 20:01:40,230 [INFO] router: Routing .pdf -> .pdf to Compression Engine
+2026-07-12 20:01:40,234 [INFO] compression_engine: Compressing PDF: C:\Users\logit\Downloads\pdfconverter\backend\temp\compress_input_f0fc657f_problems (1).pdf (quality=0.47)
+2026-07-12 20:01:40,291 [INFO] job_manager: Background job completed successfully: 38e0b055-1d67-4844-a3b0-a858f512f242
+2026-07-12 20:20:41,568 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-12 20:20:41,604 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-12 20:25:09,585 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 20:25:09,591 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 20:25:09,597 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 20:27:23,855 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 20:27:23,864 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 20:27:23,868 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 20:32:17,673 [INFO] httpx: HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-07-12 20:32:17,681 [INFO] httpx: HTTP Request: POST http://testserver/api/convert "HTTP/1.1 400 Bad Request"
+2026-07-12 20:32:17,684 [INFO] httpx: HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+2026-07-12 20:37:39,345 [INFO] server_main: Port 8000 is occupied. Trying next port...
+2026-07-12 20:37:41,371 [INFO] server_main: Starting server on http://localhost:8001
+2026-07-12 20:37:41,423 [INFO] server_main: Temporary files cleanup daemon started.

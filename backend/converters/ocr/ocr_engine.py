@@ -4,7 +4,7 @@ import subprocess
 from PIL import Image
 import fitz # PyMuPDF
 from backend.converters.base import BaseConverter
-from backend.utils.sys_info import get_tesseract_path
+from backend.utils import sys_info
 
 logger = logging.getLogger("ocr_engine")
 
@@ -19,16 +19,12 @@ class OCREngine(BaseConverter):
         return False
 
     def is_available(self) -> bool:
-        tess_path = get_tesseract_path()
-        return tess_path is not None
+        return sys_info.get_engine_path("tesseract") is not None
 
     def convert(self, input_path: str, output_path: str, options: dict = None) -> bool:
-        tess_path = get_tesseract_path()
+        tess_path = sys_info.get_engine_path("tesseract")
         if not tess_path:
-            raise RuntimeError(
-                "Tesseract OCR engine is not detected on this machine. "
-                "Please install Tesseract OCR and add it to your system PATH to run local text recognition."
-            )
+            raise RuntimeError("The application installation is corrupted. Please reinstall.")
 
         from_ext = os.path.splitext(input_path)[1].lower().strip('.')
         logger.info(f"Running local OCR on: {input_path}")

@@ -2,7 +2,7 @@ import os
 import subprocess
 import logging
 from backend.converters.base import BaseConverter
-from backend.utils.sys_info import get_libreoffice_path
+from backend.utils import sys_info
 
 logger = logging.getLogger("slides_converter")
 
@@ -16,26 +16,18 @@ class SlidesConverter(BaseConverter):
         return False
 
     def is_available(self) -> bool:
-        return True
+        return sys_info.get_engine_path("libreoffice") is not None
 
     def convert(self, input_path: str, output_path: str, options: dict = None) -> bool:
         from_ext = os.path.splitext(input_path)[1].lower().strip('.')
         to_ext = os.path.splitext(output_path)[1].lower().strip('.')
 
         # Check for LibreOffice (best quality)
-        lo_path = get_libreoffice_path()
-        if lo_path:
-            return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
+        lo_path = sys_info.get_engine_path("libreoffice")
+        if not lo_path:
+            raise RuntimeError("The application installation is corrupted. Please reinstall.")
 
-        # Fallback presentation to PDF if LibreOffice is missing
-        if from_ext == "pptx" and to_ext == "pdf":
-            logger.warning("LibreOffice not detected. Using python-pptx fallback.")
-            return self._pptx_to_pdf_fallback(input_path, output_path)
-
-        raise RuntimeError(
-            f"Powerpoint conversion from .{from_ext} to .{to_ext} without LibreOffice is not supported. "
-            f"Please install LibreOffice."
-        )
+        return self._convert_with_libreoffice(lo_path, input_path, output_path, to_ext)
 
     def _convert_with_libreoffice(self, lo_path: str, input_path: str, output_path: str, to_ext: str) -> bool:
         logger.info(f"Converting slides using LibreOffice: {input_path} -> {to_ext}")

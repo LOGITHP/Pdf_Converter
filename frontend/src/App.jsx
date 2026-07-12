@@ -421,50 +421,60 @@ export default function App() {
           </div>
         </header>
 
-        {/* System Diagnostics & Health Status */}
-        <EngineStatus diagnostics={diagnostics} loading={diagLoading} />
+        {/* Content Blocker and Engine Diagnostics if Corrupted */}
+        {diagnostics?.corrupted ? (
+          <div className="space-y-8 animate-fadeIn">
+            <div className="glassmorphism rounded-2xl p-8 text-center text-rose-800 dark:text-rose-300 border border-rose-500/20 max-w-2xl mx-auto my-12">
+              <AlertCircle className="mx-auto mb-4 text-rose-500" size={48} />
+              <h2 className="text-xl font-bold mb-2">Application Interface Suspended</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The application installation is corrupted because some bundled runtime dependencies are missing from the folder. Please verify your folder extraction or download the full software package again.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Tab Controls */}
+            <nav className="flex items-center border-b border-border/50 mb-8 p-1 gap-2 bg-muted/30 rounded-2xl max-w-md">
+              <button
+                onClick={() => setActiveTab('converter')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3.5 text-sm font-semibold rounded-xl transition-all duration-300
+                  ${activeTab === 'converter' 
+                    ? 'bg-card text-foreground shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
+                  }`}
+              >
+                <Files size={16} />
+                <span>Converter</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab('compressor')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3.5 text-sm font-semibold rounded-xl transition-all duration-300
+                  ${activeTab === 'compressor' 
+                    ? 'bg-card text-foreground shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
+                  }`}
+              >
+                <Layers size={16} />
+                <span>Compressor</span>
+              </button>
 
-        {/* Tab Controls */}
-        <nav className="flex items-center border-b border-border/50 mb-8 p-1 gap-2 bg-muted/30 rounded-2xl max-w-md">
-          <button
-            onClick={() => setActiveTab('converter')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3.5 text-sm font-semibold rounded-xl transition-all duration-300
-              ${activeTab === 'converter' 
-                ? 'bg-card text-foreground shadow-sm' 
-                : 'text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            <Files size={16} />
-            <span>Converter</span>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab('compressor')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3.5 text-sm font-semibold rounded-xl transition-all duration-300
-              ${activeTab === 'compressor' 
-                ? 'bg-card text-foreground shadow-sm' 
-                : 'text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            <Layers size={16} />
-            <span>Compressor</span>
-          </button>
+              <button
+                onClick={() => setActiveTab('pdf-tools')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3.5 text-sm font-semibold rounded-xl transition-all duration-300
+                  ${activeTab === 'pdf-tools' 
+                    ? 'bg-card text-foreground shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
+                  }`}
+              >
+                <PenTool size={16} />
+                <span>PDF Editor</span>
+              </button>
+            </nav>
 
-          <button
-            onClick={() => setActiveTab('pdf-tools')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3.5 text-sm font-semibold rounded-xl transition-all duration-300
-              ${activeTab === 'pdf-tools' 
-                ? 'bg-card text-foreground shadow-sm' 
-                : 'text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            <PenTool size={16} />
-            <span>PDF Editor</span>
-          </button>
-        </nav>
-
-        {/* TAB CONTENTS */}
-        <main className="space-y-8">
+            {/* TAB CONTENTS */}
+            <main className="space-y-8">
           
           {/* TAB 1: DOCUMENT CONVERTER */}
           {activeTab === 'converter' && (
@@ -791,6 +801,8 @@ export default function App() {
             </div>
           )}
         </main>
+      </>
+    )}
       </div>
     </div>
   );

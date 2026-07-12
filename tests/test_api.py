@@ -28,8 +28,11 @@ class TestAPI(unittest.TestCase):
         engines = data["engines"]
         self.assertIn("libreoffice", engines)
         self.assertIn("tesseract", engines)
-        self.assertIn("pymupdf", engines)
-        self.assertIn("pillow", engines)
+        self.assertIn("ghostscript", engines)
+        self.assertIn("poppler", engines)
+        self.assertIn("imagemagick", engines)
+        self.assertIn("pandoc", engines)
+        self.assertIn("ffmpeg", engines)
 
     def test_invalid_conversion_route(self):
         # DOCX to IPYNB is not supported
