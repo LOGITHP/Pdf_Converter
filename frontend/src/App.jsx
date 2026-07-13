@@ -421,19 +421,17 @@ export default function App() {
           </div>
         </header>
 
-        {/* Content Blocker and Engine Diagnostics if Corrupted */}
-        {diagnostics?.corrupted ? (
-          <div className="space-y-8 animate-fadeIn">
-            <div className="glassmorphism rounded-2xl p-8 text-center text-rose-800 dark:text-rose-300 border border-rose-500/20 max-w-2xl mx-auto my-12">
-              <AlertCircle className="mx-auto mb-4 text-rose-500" size={48} />
-              <h2 className="text-xl font-bold mb-2">Application Interface Suspended</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                The application installation is corrupted because some bundled runtime dependencies are missing from the folder. Please verify your folder extraction or download the full software package again.
-              </p>
-            </div>
+        {/* Optional Warning if Corrupted (Non-Blocking) */}
+        {diagnostics?.corrupted && (
+          <div className="bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 p-4 rounded-2xl mb-8 flex items-center gap-3 animate-fadeIn">
+            <AlertCircle size={24} className="shrink-0" />
+            <p className="text-sm">
+              <span className="font-semibold">Notice:</span> Some converter engines (like LibreOffice or OCR) are missing from your local runtime folder. Certain offline conversions may fail until they are downloaded.
+            </p>
           </div>
-        ) : (
-          <>
+        )}
+
+        <>
             {/* Tab Controls */}
             <nav className="flex items-center border-b border-border/50 mb-8 p-1 gap-2 bg-muted/30 rounded-2xl max-w-md">
               <button
@@ -802,7 +800,6 @@ export default function App() {
           )}
         </main>
       </>
-    )}
       </div>
     </div>
   );
