@@ -59,6 +59,38 @@ def is_port_in_use(port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('localhost', port)) == 0
 
+# Track background initialization state
+IS_INITIALIZING = False
+INIT_LOGS = []
+
+@app.get("/api/init_status")
+def get_init_status():
+    """Endpoint for frontend to check if a local download initialization is happening."""
+    return {"initializing": IS_INITIALIZING, "logs": INIT_LOGS[-5:] if INIT_LOGS else []}
+
+def auto_initialize_local():
+    """Automatically downloads engines locally if running on Windows and runtime folder is missing."""
+    global IS_INITIALIZING
+    if sys.platform != "win32":
+        return
+        
+    app_root = os.path.dirname(os.path.abspath(__file__))
+    runtime_dir = os.path.join(app_root, "runtime")
+    
+    # If runtime directory doesn't exist or is completely empty, trigger first-time download
+    if not os.path.exists(runtime_dir) or not os.listdir(runtime_dir):
+        IS_INITIALIZING = True
+        logger.info("First-time local run detected. Missing runtime engines. Starting auto-downloader...")
+        try:
+            import download_runtimes
+            # We intercept stdout to give frontend some logs if we want, or just let it run.
+            download_runtimes.run_all_setups()
+        except Exception as e:
+            logger.error(f"Auto-initialization failed: {e}")
+        finally:
+            IS_INITIALIZING = False
+            logger.info("Auto-initialization complete.")
+
 def cleanup_daemon():
     """Background daemon thread to clean old temp/output files every 10 mins."""
     logger.info("Temporary files cleanup daemon started.")
@@ -75,6 +107,11 @@ def startup_event():
     ensure_directories()
     # Initial clean of old temp files
     run_cleanup(force_all=True)
+    
+    # Start auto-downloader thread if necessary (runs in background)
+    t_init = threading.Thread(target=auto_initialize_local, daemon=True)
+    t_init.start()
+    
     # Start background cleanup thread
     t = threading.Thread(target=cleanup_daemon, daemon=True)
     t.start()

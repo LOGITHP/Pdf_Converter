@@ -264,6 +264,8 @@ async def pdf_edit(
     job_manager.submit_task(job_id, run_edit)
     return {"job_id": job_id, "status": "queued"}
 
+from fastapi.background import BackgroundTask
+
 @router.get("/api/download/{filename}")
 def download_file(filename: str):
     """Download a completed conversion/compression output file."""
@@ -276,7 +278,8 @@ def download_file(filename: str):
     return FileResponse(
         file_path, 
         media_type="application/octet-stream", 
-        filename=clean_filename.split('_', 2)[-1]
+        filename=clean_filename.split('_', 2)[-1],
+        background=BackgroundTask(os.remove, file_path)
     )
 
 def uuid_prefix():

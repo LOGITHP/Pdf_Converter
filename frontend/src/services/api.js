@@ -19,6 +19,16 @@ const client = axios.create({
 });
 
 export const api = {
+  // 0. Get initialization status (first time local run)
+  getInitStatus: async () => {
+    try {
+      const res = await client.get('/api/init_status');
+      return res.data;
+    } catch (e) {
+      return { initializing: false, logs: [] };
+    }
+  },
+
   // 1. Get system engine health diagnostics
   getStatus: async () => {
     const res = await client.get('/api/status');

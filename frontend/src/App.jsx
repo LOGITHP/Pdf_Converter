@@ -14,6 +14,7 @@ export default function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [diagnostics, setDiagnostics] = useState(null);
   const [diagLoading, setDiagLoading] = useState(true);
+  const [initStatus, setInitStatus] = useState({ initializing: true, logs: [] });
   
   // State Queues
   const [converterQueue, setConverterQueue] = useState([]);
@@ -40,7 +41,18 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    loadDiagnostics();
+    let interval;
+    const checkInit = async () => {
+      const status = await api.getInitStatus();
+      setInitStatus(status);
+      if (!status.initializing) {
+        clearInterval(interval);
+        loadDiagnostics();
+      }
+    };
+    checkInit();
+    interval = setInterval(checkInit, 2500);
+    return () => clearInterval(interval);
   }, []);
 
   const loadDiagnostics = async () => {
@@ -391,6 +403,23 @@ export default function App() {
     }
   };
 
+  if (initStatus.initializing) {
+    return (
+      <div className="min-h-screen animated-bg flex flex-col items-center justify-center text-foreground p-4 text-center">
+        <div className="glassmorphism rounded-3xl p-12 max-w-md w-full shadow-2xl flex flex-col items-center">
+          <RefreshCw className="animate-spin text-primary mb-6" size={48} />
+          <h2 className="text-2xl font-bold mb-3 gradient-title">Initializing Converter</h2>
+          <p className="text-muted-foreground mb-6 text-sm">
+            Downloading local offline engines. This is a one-time setup and may take a few minutes depending on your internet connection...
+          </p>
+          <div className="w-full bg-muted rounded-full h-2 mb-2 overflow-hidden">
+            <div className="bg-primary h-full rounded-full animate-pulse w-full"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen animated-bg text-foreground transition-colors duration-300 antialiased font-sans">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -403,10 +432,6 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight gradient-title">Universal Document Converter</h1>
-              <p className="text-xs text-muted-foreground font-semibold flex items-center gap-1 mt-0.5">
-                <ShieldCheck size={13} className="text-emerald-500" />
-                <span>{diagnostics?.environment === 'server' ? 'Cloud Server Mode • Universal Converter & PDF Toolkit' : '100% Offline • Local Converter & PDF Toolkit'}</span>
-              </p>
             </div>
           </div>
 
@@ -421,15 +446,7 @@ export default function App() {
           </div>
         </header>
 
-        {/* Optional Warning if Corrupted (Non-Blocking) */}
-        {diagnostics?.corrupted && (
-          <div className="bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 p-4 rounded-2xl mb-8 flex items-center gap-3 animate-fadeIn">
-            <AlertCircle size={24} className="shrink-0" />
-            <p className="text-sm">
-              <span className="font-semibold">Notice:</span> Some converter engines (like LibreOffice or OCR) are missing from your local runtime folder. Certain offline conversions may fail until they are downloaded.
-            </p>
-          </div>
-        )}
+        {/* Optional Warning Removed as requested */}
 
         <>
             {/* Tab Controls */}
