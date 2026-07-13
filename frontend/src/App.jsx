@@ -421,11 +421,17 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen animated-bg text-foreground transition-colors duration-300 antialiased font-sans">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="relative min-h-screen animated-bg text-foreground transition-colors duration-300 antialiased font-sans overflow-hidden">
+      
+      {/* Animated Floating Background Shapes */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary/20 dark:bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+      <div className="absolute top-[20%] right-[-10%] w-72 h-72 bg-emerald-500/20 dark:bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-[-20%] left-[20%] w-80 h-80 bg-purple-500/20 dark:bg-purple-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+
+      <div className="relative container mx-auto px-4 py-8 max-w-6xl z-10">
         
         {/* Main Header */}
-        <header className="flex items-center justify-between mb-8 border-b border-border/40 pb-5">
+        <header className="flex items-center justify-between mb-8 border-b border-border/40 pb-5 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-primary/10 text-primary animate-pulse">
               <Files size={28} />

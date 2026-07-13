@@ -264,7 +264,7 @@ async def pdf_edit(
     job_manager.submit_task(job_id, run_edit)
     return {"job_id": job_id, "status": "queued"}
 
-from fastapi.background import BackgroundTask
+from starlette.background import BackgroundTask
 
 @router.get("/api/download/{filename}")
 def download_file(filename: str):

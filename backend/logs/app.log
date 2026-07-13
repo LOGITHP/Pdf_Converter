@@ -146,3 +146,4 @@ OSError: [WinError 216] This version of %1 is not compatible with the version of
 2026-07-13 22:12:59,269 [INFO] server_main: Cleaning up workspace folders on server shutdown.
 2026-07-13 22:13:10,127 [INFO] server_main: Starting server on http://localhost:8000
 2026-07-13 22:13:10,164 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 22:22:06,770 [INFO] server_main: Cleaning up workspace folders on server shutdown.
