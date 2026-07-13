@@ -392,7 +392,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 antialiased font-sans">
+    <div className="min-h-screen animated-bg text-foreground transition-colors duration-300 antialiased font-sans">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         
         {/* Main Header */}
@@ -402,10 +402,10 @@ export default function App() {
               <Files size={28} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight gradient-title">AeroPDF Universal</h1>
+              <h1 className="text-2xl font-bold tracking-tight gradient-title">Universal Document Converter</h1>
               <p className="text-xs text-muted-foreground font-semibold flex items-center gap-1 mt-0.5">
                 <ShieldCheck size={13} className="text-emerald-500" />
-                <span>100% Offline • Local Converter & PDF Toolkit</span>
+                <span>{diagnostics?.environment === 'server' ? 'Cloud Server Mode • Universal Converter & PDF Toolkit' : '100% Offline • Local Converter & PDF Toolkit'}</span>
               </p>
             </div>
           </div>

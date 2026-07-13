@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     imagemagick \
     pandoc \
     ffmpeg \
+    chromium \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements

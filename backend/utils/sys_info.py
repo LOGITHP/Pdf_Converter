@@ -108,6 +108,7 @@ def get_system_diagnostics() -> dict:
         
     return {
         "os": sys.platform,
+        "environment": "server" if sys.platform != "win32" else "local",
         "python_version": sys.version.split(" ")[0],
         "app_root": get_app_root(),
         "corrupted": corrupted,

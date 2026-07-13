@@ -123,3 +123,26 @@ body {
 .dark .gradient-title {
   background-image: linear-gradient(to right, #60a5fa, #34d399, #818cf8);
 }
+
+@keyframes gradient-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-bg {
+  background: linear-gradient(-45deg, hsl(var(--background)), hsl(var(--muted)), hsl(var(--background)), hsl(var(--secondary)));
+  background-size: 400% 400%;
+  animation: gradient-bg 15s ease infinite;
+}
+.dark .animated-bg {
+  background: linear-gradient(-45deg, hsl(var(--background)), hsl(var(--card)), hsl(var(--background)), hsl(var(--muted)));
+  background-size: 400% 400%;
+  animation: gradient-bg 15s ease infinite;
+}

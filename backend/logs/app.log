@@ -133,3 +133,11 @@ OSError: [WinError 216] This version of %1 is not compatible with the version of
 2026-07-12 20:37:39,345 [INFO] server_main: Port 8000 is occupied. Trying next port...
 2026-07-12 20:37:41,371 [INFO] server_main: Starting server on http://localhost:8001
 2026-07-12 20:37:41,423 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 10:28:14,026 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-13 10:28:14,098 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 14:57:07,415 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-13 14:57:07,495 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 14:57:23,801 [INFO] server_main: Cleaning up workspace folders on server shutdown.
+2026-07-13 22:05:38,933 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-13 22:05:38,987 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 22:05:50,325 [INFO] server_main: Cleaning up workspace folders on server shutdown.

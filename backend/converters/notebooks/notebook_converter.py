@@ -66,17 +66,87 @@ class NotebookConverter(BaseConverter):
         return True
 
     def _nb_to_pdf(self, nb, output_path: str) -> bool:
-        from nbconvert import PDFExporter
-        exporter = PDFExporter()
+        # High-fidelity Jupyter Notebook PDF conversion
+        # We first convert to HTML, then use a Headless Browser (Edge/Chrome) for perfect web-rendering
+        import tempfile
+        import subprocess
+        import sys
+        
         try:
-            # First try the standard nbconvert PDF exporter (requires pdflatex)
+            from nbconvert import HTMLExporter
+            exporter = HTMLExporter()
             body, _ = exporter.from_notebook_node(nb)
-            with open(output_path, "wb") as f:
-                f.write(body)
-            return True
+            
+            with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as tf:
+                tf.write(body.encode('utf-8'))
+                temp_html_path = tf.name
+
+            # 1. Try Headless Browser (Perfect CSS/JS layout)
+            browser_paths = [
+                r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+                r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                "/usr/bin/chromium",
+                "/usr/bin/google-chrome"
+            ]
+            browser_exe = next((p for p in browser_paths if os.path.exists(p)), None)
+            
+            if browser_exe:
+                cmd = [
+                    browser_exe,
+                    "--headless",
+                    "--disable-gpu",
+                    "--no-sandbox",
+                    "--print-to-pdf=" + os.path.abspath(output_path),
+                    os.path.abspath(temp_html_path)
+                ]
+                result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=60)
+                if result.returncode == 0 and os.path.exists(output_path):
+                    os.remove(temp_html_path)
+                    return True
+                else:
+                    logger.warning(f"Headless browser PDF render failed: {result.stderr}")
+
+            # 2. Try LibreOffice Fallback
+            from backend.utils import sys_info
+            lo_path = sys_info.get_engine_path("libreoffice")
+            if lo_path:
+                out_dir = os.path.dirname(output_path)
+                cmd = [
+                    lo_path,
+                    "--headless",
+                    "--convert-to",
+                    "pdf:writer_pdf_Export",
+                    "--outdir",
+                    out_dir,
+                    temp_html_path
+                ]
+                result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=60)
+                if result.returncode == 0:
+                    lo_out_name = os.path.splitext(os.path.basename(temp_html_path))[0] + ".pdf"
+                    lo_out_path = os.path.join(out_dir, lo_out_name)
+                    if os.path.exists(lo_out_path):
+                        if os.path.abspath(lo_out_path) != os.path.abspath(output_path):
+                            if os.path.exists(output_path):
+                                os.remove(output_path)
+                            os.rename(lo_out_path, output_path)
+                        os.remove(temp_html_path)
+                        return True
+                else:
+                    logger.warning(f"LibreOffice HTML->PDF render failed: {result.stderr}")
+                    
         except Exception as e:
-            logger.warning(f"Standard LaTeX-based nbconvert PDF exporter failed: {e}. Falling back to ReportLab manual builder.")
-            return self._nb_to_pdf_fallback(nb, output_path)
+            logger.warning(f"HTML exporter pipeline failed: {e}")
+        finally:
+            if 'temp_html_path' in locals() and os.path.exists(temp_html_path):
+                try:
+                    os.remove(temp_html_path)
+                except:
+                    pass
+
+        # 3. Last Resort Fallback to ReportLab (Manual formatting builder)
+        logger.warning(f"No high-fidelity engine available. Falling back to ReportLab manual builder.")
+        return self._nb_to_pdf_fallback(nb, output_path)
+
 
     def _nb_to_pdf_fallback(self, nb, output_path: str) -> bool:
         # Generates a styled, readable PDF of the Jupyter Notebook without LaTeX
