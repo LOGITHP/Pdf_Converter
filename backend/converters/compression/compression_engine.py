@@ -30,21 +30,44 @@ class CompressionEngine(BaseConverter):
 
     def compress_pdf(self, input_path: str, output_path: str, quality: float) -> bool:
         logger.info(f"Compressing PDF: {input_path} (quality={quality})")
+        
+        # Try to use Ghostscript for real PDF downsampling
+        from backend.utils.sys_info import get_engine_path
+        import subprocess
+        
+        gs_path = get_engine_path("ghostscript")
+        if gs_path:
+            try:
+                gs_args = [
+                    gs_path,
+                    "-sDEVICE=pdfwrite",
+                    "-dCompatibilityLevel=1.4",
+                ]
+                
+                # Map our 0.0-1.0 quality slider to GS profiles
+                if quality <= 0.4:
+                    gs_args.append("-dPDFSETTINGS=/screen") # Lowest quality, smallest size (72dpi)
+                elif quality <= 0.7:
+                    gs_args.append("-dPDFSETTINGS=/ebook") # Medium quality (150dpi)
+                else:
+                    gs_args.append("-dPDFSETTINGS=/printer") # High quality (300dpi)
+                    
+                gs_args.extend([
+                    "-dNOPAUSE",
+                    "-dQUIET",
+                    "-dBATCH",
+                    f"-sOutputFile={output_path}",
+                    input_path
+                ])
+                
+                subprocess.run(gs_args, check=True, capture_output=True)
+                return True
+            except Exception as e:
+                logger.warning(f"Ghostscript compression failed, falling back to PyMuPDF. Error: {e}")
+        
+        # Fallback to PyMuPDF deflation
         doc = fitz.open(input_path)
         try:
-            # Downsample images within PDF if quality is set low
-            if quality < 0.8:
-                # Loop through all pages to optimize images
-                for page_num in range(len(doc)):
-                    page = doc.load_page(page_num)
-                    image_list = page.get_images()
-                    for img in image_list:
-                        xref = img[0]
-                        # We can replace or compress specific image streams using fitz API,
-                        # but PyMuPDF's built-in save(garbage=3, deflate=True) is extremely safe.
-                        pass
-            
-            # Save using maximum garbage collection and deflation compression
             doc.save(
                 output_path, 
                 garbage=3, 

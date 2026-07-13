@@ -147,3 +147,32 @@ OSError: [WinError 216] This version of %1 is not compatible with the version of
 2026-07-13 22:13:10,127 [INFO] server_main: Starting server on http://localhost:8000
 2026-07-13 22:13:10,164 [INFO] server_main: Temporary files cleanup daemon started.
 2026-07-13 22:22:06,770 [INFO] server_main: Cleaning up workspace folders on server shutdown.
+2026-07-13 22:25:11,029 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-13 22:25:11,069 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 22:25:38,683 [INFO] job_manager: Starting background job: 1c516629-a65b-4640-8225-f78e0985916b
+2026-07-13 22:25:41,967 [INFO] router: Routing .ipynb -> .pdf to NotebookConverter
+2026-07-13 22:25:42,035 [ERROR] traitlets: Notebook JSON is invalid: Additional properties are not allowed ('jetTransient' was unexpected)
+
+Failed validating 'additionalProperties' in display_data:
+
+On instance['cells'][4]['outputs'][1]:
+{'data': {'image/png': 'iVBORw0KGgoAAAANSUhEUgAAAhwAAAHWCAYAAAA8ZVAzAAAAOnRFWHRTb2Z0d2Fy...',
+          'text/plain': '<Figure size 600x500 with 1 Axes>'},
+ 'jetTransient': {'display_id': None},
+ 'metadata': {},
+ 'output_type': 'display_data'}
+2026-07-13 22:25:42,729 [WARNING] traitlets: Alternative text is missing on 5 image(s).
+2026-07-13 22:25:46,383 [INFO] job_manager: Background job completed successfully: 1c516629-a65b-4640-8225-f78e0985916b
+2026-07-13 22:27:24,922 [INFO] job_manager: Starting background job: b63789ce-5456-4bc6-9ddf-14244afb8f0b
+2026-07-13 22:27:24,922 [INFO] router: Routing .pdf -> .pdf to Compression Engine
+2026-07-13 22:27:24,922 [INFO] compression_engine: Compressing PDF: C:\Users\logit\Downloads\pdfconverter\backend\temp\compress_input_7f13a9d6_Self-Powered Intelligent Irrigation Sprinkler with Integrated Hydro-Generator and Dual-Sensor Feedback.pdf (quality=0.39)
+2026-07-13 22:27:25,013 [INFO] job_manager: Background job completed successfully: b63789ce-5456-4bc6-9ddf-14244afb8f0b
+2026-07-13 22:29:05,310 [INFO] job_manager: Starting background job: e6a4da2f-e71a-4c21-91df-41b629edf4f3
+2026-07-13 22:29:05,310 [INFO] router: Routing .png -> .png to Compression Engine
+2026-07-13 22:29:05,310 [INFO] compression_engine: Compressing Image: C:\Users\logit\Downloads\pdfconverter\backend\temp\compress_input_f964ba1a_Screenshot 2026-04-14 165034.png (quality=0.35)
+2026-07-13 22:29:06,358 [INFO] job_manager: Background job completed successfully: e6a4da2f-e71a-4c21-91df-41b629edf4f3
+2026-07-13 22:29:26,626 [INFO] job_manager: Starting background job: 2fd80a77-e861-461d-805b-137daccb53b2
+2026-07-13 22:29:26,632 [INFO] router: Routing .png -> .png to Compression Engine
+2026-07-13 22:29:26,633 [INFO] compression_engine: Compressing Image: C:\Users\logit\Downloads\pdfconverter\backend\temp\compress_input_8dd0a3fd_Screenshot 2026-04-14 165034.png (quality=0.1)
+2026-07-13 22:29:27,643 [INFO] job_manager: Background job completed successfully: 2fd80a77-e861-461d-805b-137daccb53b2
+2026-07-13 22:38:58,685 [INFO] server_main: Cleaning up workspace folders on server shutdown.

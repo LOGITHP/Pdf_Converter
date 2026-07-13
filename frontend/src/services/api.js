@@ -64,13 +64,38 @@ export const api = {
     return res.data; // { job_id: '...', status: 'queued' }
   },
 
-  // 4. Poll job status/progress
-  getJobStatus: async (jobId) => {
-    const res = await client.get(`/api/jobs/${jobId}`);
-    return res.data; // { status: '...', progress: 50, result_file: '...', ... }
+  // 4. PDF Tools: Merge
+  pdfMerge: async (files) => {
+    const formData = new FormData();
+    files.forEach(f => formData.append('files', f));
+    const res = await client.post('/api/pdf/merge', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return res.data;
   },
 
-  // 5. Get file download link
+  // 5. PDF Tools: Edit (Split, Rotate, Watermark, Encrypt)
+  pdfEdit: async (file, operation, options = {}) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('operation', operation);
+    if (options.watermark_text) formData.append('watermark_text', options.watermark_text);
+    if (options.password) formData.append('password', options.password);
+    if (options.rotation_angle) formData.append('rotation_angle', options.rotation_angle.toString());
+    
+    const res = await client.post('/api/pdf/edit', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return res.data;
+  },
+
+  // 6. Poll job status/progress
+  getJobStatus: async (jobId) => {
+    const res = await client.get(`/api/jobs/${jobId}`);
+    return res.data;
+  },
+
+  // 7. Get file download link
   getDownloadUrl: (filename) => {
     if (!filename) return '#';
     return `${API_BASE}/api/download/${filename}`;

@@ -253,22 +253,13 @@ export default function App() {
       pollJobStatus(
         res.job_id,
         async (job) => {
-          // Find compressed size
-          let size = null;
-          try {
-            const headRes = await fetch(api.getDownloadUrl(job.result_file), { method: 'HEAD' });
-            size = headRes.headers.get('content-length');
-          } catch(err) {
-            console.error(err);
-          }
-          
           setCompressorQueue(prev => prev.map(i => 
             i.id === id ? { 
               ...i, 
               status: 'completed', 
               progress: 100, 
               resultFile: job.result_file,
-              compressedSize: size ? parseInt(size) : Math.round(item.size * quality) 
+              compressedSize: Math.round(item.size * quality) 
             } : i
           ));
         },
@@ -334,14 +325,7 @@ export default function App() {
       const formData = new FormData();
       
       if (pdfOp === 'merge') {
-        // Upload all selected PDFs
-        pdfFiles.forEach(f => formData.append('files', f));
-        
-        // Custom Axios request to a dedicated merge endpoint or PDF converter route
-        // For simplicity, let's create a custom post API path `/api/pdf/merge`
-        const res = await api.client.post('/api/pdf/merge', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const res = await api.pdfMerge(pdfFiles);
         
         setPdfToolProgress(50);
         pollJobStatus(
@@ -360,20 +344,12 @@ export default function App() {
       } else {
         // Single file operations
         const file = pdfFiles[0];
-        formData.append('file', file);
-        formData.append('operation', pdfOp);
-        
-        if (pdfOp === 'watermark') {
-          formData.append('watermark_text', pdfWatermarkText);
-        } else if (pdfOp === 'encrypt' || pdfOp === 'decrypt') {
-          formData.append('password', pdfPassword);
-        } else if (pdfOp === 'rotate') {
-          formData.append('rotation_angle', pdfRotation.toString());
-        }
-
-        const res = await api.client.post('/api/pdf/edit', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const options = {
+          watermark_text: pdfWatermarkText,
+          password: pdfPassword,
+          rotation_angle: pdfRotation
+        };
+        const res = await api.pdfEdit(file, pdfOp, options);
 
         setPdfToolProgress(50);
         pollJobStatus(
