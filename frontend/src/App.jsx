@@ -329,7 +329,7 @@ export default function App() {
         
         setPdfToolProgress(50);
         pollJobStatus(
-          res.data.job_id,
+          res.job_id,
           (job) => {
             setPdfToolProgress(100);
             setIsPdfToolProcessing(false);
@@ -353,7 +353,7 @@ export default function App() {
 
         setPdfToolProgress(50);
         pollJobStatus(
-          res.data.job_id,
+          res.job_id,
           (job) => {
             setPdfToolProgress(100);
             setIsPdfToolProcessing(false);
