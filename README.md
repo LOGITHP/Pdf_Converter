@@ -17,7 +17,7 @@ A professional, high-performance Universal Document Converter and PDF editing to
 
 ## 💻 Local Setup Instructions
 
-Yes, the files in the GitHub repository are **100% sufficient** to run the app locally, provided you use **Docker**. Docker automatically installs all the heavy system binaries (LibreOffice, Ghostscript, FFmpeg) just like it does on the Render server.
+The files in the GitHub repository are **100% sufficient** to run the app locally, provided you use **Docker**. Docker automatically installs all the heavy system binaries (LibreOffice, Ghostscript, FFmpeg).
 
 ### Method 1: Docker Setup (Recommended & Fully Supported by GitHub Repo)
 If you have Docker Desktop installed, you don't need to manually install Node, Python, or any system binaries.
