@@ -17,33 +17,38 @@ A professional, high-performance Universal Document Converter and PDF editing to
 
 ## 💻 Local Setup Instructions
 
-If you have the local setup files, follow these instructions to run the application on your computer:
+Yes, the files in the GitHub repository are **100% sufficient** to run the app locally, provided you use **Docker**. Docker automatically installs all the heavy system binaries (LibreOffice, Ghostscript, FFmpeg) just like it does on the Render server.
 
-### 1. Requirements
-- Python 3.10+
-- Node.js v18+
+### Method 1: Docker Setup (Recommended & Fully Supported by GitHub Repo)
+If you have Docker Desktop installed, you don't need to manually install Node, Python, or any system binaries.
+1. Build the Docker image locally:
+   ```bash
+   docker build -t universal-converter .
+   ```
+2. Run the Docker container:
+   ```bash
+   docker run -p 10000:10000 universal-converter
+   ```
+3. Open your browser to `http://localhost:10000`.
 
-### 2. Frontend Setup
-Navigate to the frontend folder, install dependencies, and build the production assets:
-```bash
-cd frontend
-npm install
-npm run build
-cd ..
-```
+### Method 2: Native Python Setup (Requires Additional Files)
+If you want to run the app natively on Windows using standard Python and Node.js without Docker, the GitHub repository is **not enough** on its own because the native Windows binaries (`.exe` engines) are excluded from the repository to save space.
 
-### 3. Backend Setup & Running
-Install the required Python packages and launch the FastAPI server:
-```bash
-pip install -r requirements.txt
-python main.py
-```
-This script will:
-- Initialize the FastAPI server on port 8000.
-- Automatically serve the React static assets from `frontend/dist/`.
-- Open your default web browser automatically to `http://localhost:8000`.
+*Note: For this native setup, please contact me for the `download_runtimes.py` script or the full repository drive link containing the `runtime/` folder.*
 
-*(Note: For high-fidelity Word document conversions and media processing locally, you must run the `download_runtimes.py` script to fetch local `.exe` binaries, which are automatically omitted from cloud deployments).*
+1. **Frontend Setup**:
+   ```bash
+   cd frontend
+   npm install
+   npm run build
+   cd ..
+   ```
+2. **Backend Setup & Running**:
+   ```bash
+   pip install -r requirements.txt
+   python main.py
+   ```
+   The app will open automatically at `http://localhost:8000`.
 
 ---
 
