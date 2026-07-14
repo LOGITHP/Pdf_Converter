@@ -73,7 +73,7 @@ export default function DragDropZone({ onFilesAdded, accept = "*", subtitle }) {
         Drag and drop files here
       </h3>
       <p className="text-sm text-muted-foreground mb-6 max-w-sm">
-        {subtitle || "Select folders or multiple files directly from your desktop to begin local processing"}
+        {subtitle || "Select folders or multiple files directly from your desktop to begin processing"}
       </p>
 
       {/* Supported format badges */}

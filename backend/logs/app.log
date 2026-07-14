@@ -178,3 +178,34 @@ On instance['cells'][4]['outputs'][1]:
 2026-07-13 22:38:58,685 [INFO] server_main: Cleaning up workspace folders on server shutdown.
 2026-07-13 22:40:53,809 [INFO] server_main: Starting server on http://localhost:8000
 2026-07-13 22:40:53,850 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 22:41:30,532 [INFO] job_manager: Starting background job: 2668c328-5bc0-41c4-a8ca-4d7882d41dd9
+2026-07-13 22:41:30,534 [INFO] router: Routing .jpg -> .jpg to Compression Engine
+2026-07-13 22:41:30,534 [INFO] compression_engine: Compressing Image: C:\Users\logit\Downloads\pdfconverter\backend\temp\compress_input_c0ccbec6_bg.jpg (quality=0.1)
+2026-07-13 22:41:32,013 [INFO] job_manager: Background job completed successfully: 2668c328-5bc0-41c4-a8ca-4d7882d41dd9
+2026-07-13 22:42:01,037 [INFO] job_manager: Starting background job: ce970065-2bee-4f0a-a7a5-2b0bb5b7ba12
+2026-07-13 22:42:01,043 [INFO] router: Routing .png -> .png to Compression Engine
+2026-07-13 22:42:01,044 [INFO] compression_engine: Compressing Image: C:\Users\logit\Downloads\pdfconverter\backend\temp\compress_input_b6ac0f22_Screenshot 2026-04-14 165034 (1).png (quality=0.1)
+2026-07-13 22:42:02,068 [INFO] job_manager: Background job completed successfully: ce970065-2bee-4f0a-a7a5-2b0bb5b7ba12
+2026-07-13 22:42:26,301 [INFO] job_manager: Starting background job: e458dcb5-1a79-478b-a05a-db366ade65a7
+2026-07-13 22:42:26,301 [INFO] pdf_converter: Merging 2 PDF files into C:\Users\logit\Downloads\pdfconverter\backend\output\merged_acc5ad4c_document.pdf
+2026-07-13 22:42:26,324 [INFO] job_manager: Background job completed successfully: e458dcb5-1a79-478b-a05a-db366ade65a7
+2026-07-13 22:42:36,114 [INFO] job_manager: Starting background job: 982ae1a7-15df-46cf-94a2-885fcfcddde4
+2026-07-13 22:42:36,114 [INFO] pdf_converter: Splitting PDF C:\Users\logit\Downloads\pdfconverter\backend\temp\edit_in_53991e71_Self-Powered Intelligent Irrigation Sprinkler with Integrated Hydro-Generator and Dual-Sensor Feedback.pdf into single pages in C:\Users\logit\Downloads\pdfconverter\backend\temp\split_3bdfbdac
+2026-07-13 22:42:36,144 [INFO] job_manager: Background job completed successfully: 982ae1a7-15df-46cf-94a2-885fcfcddde4
+2026-07-13 22:43:27,147 [INFO] job_manager: Starting background job: 53092baf-1075-41ba-86ac-e1229f400467
+2026-07-13 22:43:27,148 [INFO] router: Routing .pdf -> .pdf to MetadataEngine
+2026-07-13 22:43:27,157 [INFO] job_manager: Background job completed successfully: 53092baf-1075-41ba-86ac-e1229f400467
+2026-07-13 22:52:23,576 [INFO] server_main: Cleaning up workspace folders on server shutdown.
+2026-07-13 22:53:32,679 [INFO] server_main: Starting server on http://localhost:8000
+2026-07-13 22:53:32,718 [INFO] server_main: Temporary files cleanup daemon started.
+2026-07-13 22:53:50,994 [INFO] job_manager: Starting background job: 97790c2d-7150-4641-88dc-929cd52b729f
+2026-07-13 22:53:50,996 [INFO] pdf_converter: Merging 2 PDF files into C:\Users\logit\Downloads\pdfconverter\backend\output\merged_5805e51f_document.pdf
+2026-07-13 22:53:51,008 [INFO] job_manager: Background job completed successfully: 97790c2d-7150-4641-88dc-929cd52b729f
+2026-07-13 22:54:18,240 [INFO] job_manager: Starting background job: 6b3b5a12-7d28-491b-a911-4cd8a304a774
+2026-07-13 22:54:18,240 [INFO] pdf_converter: Splitting PDF C:\Users\logit\Downloads\pdfconverter\backend\temp\edit_in_db3ff6cb_Self-Powered Intelligent Irrigation Sprinkler with Integrated Hydro-Generator and Dual-Sensor Feedback.pdf into single pages in C:\Users\logit\Downloads\pdfconverter\backend\temp\split_d6065366
+2026-07-13 22:54:18,269 [INFO] job_manager: Background job completed successfully: 6b3b5a12-7d28-491b-a911-4cd8a304a774
+2026-07-13 22:55:22,735 [INFO] job_manager: Starting background job: cb73a2ca-a640-477a-8fcf-67cf0daf1577
+2026-07-13 22:55:22,735 [INFO] router: Routing .jpg -> .pdf to ImageConverter
+2026-07-13 22:55:22,735 [INFO] image_converter: Converting image: C:\Users\logit\Downloads\pdfconverter\backend\temp\input_8549abf0_bg.jpg -> C:\Users\logit\Downloads\pdfconverter\backend\output\converted_bf9c5e85_bg.pdf
+2026-07-13 22:55:23,330 [INFO] job_manager: Background job completed successfully: cb73a2ca-a640-477a-8fcf-67cf0daf1577
+2026-07-13 22:55:45,441 [INFO] server_main: Cleaning up workspace folders on server shutdown.

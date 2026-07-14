@@ -1,105 +1,72 @@
-# AeroPDF Universal: Offline Document Converter & PDF Toolkit
+# Universal Document Converter & PDF Toolkit
 
-AeroPDF Universal is a professional, privacy-first, offline Universal Document Converter and PDF editing toolkit. The application runs entirely on your local machine using a **FastAPI backend** (Python) and a **React + Tailwind CSS frontend** served locally. 
+A professional, high-performance Universal Document Converter and PDF editing toolkit. Built with a **React + Tailwind CSS frontend** and a **FastAPI (Python) backend**, this application is designed for rapid document processing, compression, and advanced PDF manipulations.
 
-Files are never uploaded to the cloud, ensuring absolute confidentiality, maximum security, and high performance.
-
----
-
-## 🌟 Key Features
-
-1. **Document Conversion**:
-   - **Office Formats**: Converts Word (`.docx`, `.doc`, `.odt`), Excel (`.xlsx`, `.xls`, `.ods`, `.csv`), and PowerPoint (`.pptx`, `.ppt`, `.odp`) to PDF, HTML, or text formats.
-   - **Jupyter Notebooks**: Converts `.ipynb` files to PDF, HTML, Markdown, or raw Python, complete with syntax highlighting and base64 embedded graphs.
-   - **Source Code**: Renders programming source files (`.py`, `.js`, `.json`, `.cpp`, `.java`, etc.) into beautifully styled PDFs with line numbers and Pygments syntax highlighting.
-   - **Markdown & Text**: Transforms Markdown (`.md`) or plain logs (`.txt`, `.log`) into clear PDF or HTML views.
-   - **Images**: Scales and wraps image files (`.png`, `.jpg`, `.webp`, `.heic`) into standard A4 PDF pages.
-
-2. **File Compression**:
-   - **Image Compressor**: Downscales resolution and optimizes quality levels (10% to 100%) for JPG, PNG, and WebP assets.
-   - **PDF Compressor**: Reduces PDF sizes by executing structural optimization, image downsampling, and metadata clearing.
-
-3. **PDF Editing Toolkit**:
-   - **Merge**: Combines multiple PDF files in order into a single document.
-   - **Split**: Extracts pages of a PDF into individual page files.
-   - **Rotate**: Rotates PDF page views (90°, 180°, 270°).
-   - **Watermark**: Injects customizable text watermarks diagonally across pages with custom opacity.
-   - **Encrypt & Decrypt**: Protects PDFs with password protection or removes password locks.
-
-4. **Local OCR (Text Recognition)**:
-   - Recognizes text within scans or images using local Tesseract OCR and generates searchable PDF documents.
-
-5. **Metadata Engine**:
-   - View, extract, or edit EXIF metadata and PDF description tags (Author, Creator, Keywords, Copyright) offline.
+**Note**: *Contact me for the files to set up locally or for the full repository drive link.*
 
 ---
 
-## ⚙️ System Dependencies
-
-For high-fidelity conversions and advanced features, the application dynamically scans your system PATH:
-- **LibreOffice Headless**: Needed for high-fidelity conversion of Microsoft Office files. If missing, the app falls back to basic Python library layout parsers (Mammoth & python-docx).
-- **Tesseract OCR**: Needed to extract text from images and compile searchable PDFs. If missing, OCR functions will display fallback alerts in the UI.
+## 🌟 Advantages of the Application
+- **Privacy & Security**: All file processing happens entirely in-memory and in secure staging directories. Files are never sent to external third-party APIs.
+- **Universal Format Support**: Convert Office documents (Word, Excel, PPT), Code snippets, Jupyter Notebooks, Markdown, and Images directly into PDFs or other formats.
+- **Advanced PDF Toolkit**: Effortlessly Merge, Split, Rotate, Watermark, and Encrypt/Decrypt PDF documents.
+- **File Compression**: Intelligently compress images and PDFs with adjustable quality levels to save space.
+- **Docker Ready**: Fully containerized environment ensuring that complex system dependencies (like LibreOffice, FFmpeg, Ghostscript) work flawlessly in the cloud without complex manual installation.
 
 ---
 
-## 📂 Project Structure
+## 💻 Local Setup Instructions
 
-```
-UniversalConverter/
-├── backend/
-│   ├── api/            # FastAPI REST endpoints
-│   ├── router/         # File type conversion router
-│   ├── workers/        # Asynchronous job manager queue
-│   ├── converters/     # Specific file engines (pdf, office, notebook, code, etc.)
-│   ├── utils/          # System checking and file cleanup utilities
-│   ├── temp/           # Intermediate staging files
-│   └── output/         # Completed conversion downloads
-├── frontend/
-│   ├── src/            # React + Tailwind components
-│   └── dist/           # Compiled production static assets
-├── tests/              # Backend and routing unit tests
-├── requirements.txt    # Python package requirements
-└── main.py             # Server launcher script
+If you have the local setup files, follow these instructions to run the application on your computer:
+
+### 1. Requirements
+- Python 3.10+
+- Node.js v18+
+
+### 2. Frontend Setup
+Navigate to the frontend folder, install dependencies, and build the production assets:
+```bash
+cd frontend
+npm install
+npm run build
+cd ..
 ```
 
----
-
-## 🚀 Local Setup and Startup
-
-### 1. Python Server Dependencies
-Install python packages from the root workspace folder:
+### 3. Backend Setup & Running
+Install the required Python packages and launch the FastAPI server:
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Launch the Application
-Run the root launcher script:
-```bash
 python main.py
 ```
 This script will:
-- Initialize the FastAPI server on port 8000 (or next available).
-- Start a background cleanup daemon to purge intermediate temp files.
+- Initialize the FastAPI server on port 8000.
 - Automatically serve the React static assets from `frontend/dist/`.
 - Open your default web browser automatically to `http://localhost:8000`.
 
-### 3. Developer Mode (Frontend Hot Reloading)
-To modify the React user interface with live reloading:
-- Navigate to the frontend directory:
-  ```bash
-  cd frontend
-  npm install
-  npm run dev
-  ```
-- Open `http://localhost:5173` in your browser. The frontend automatically routes its requests to the FastAPI backend running on port 8000.
-- When done, compile the final production build:
-  ```bash
-  npm run build
-  ```
+*(Note: For high-fidelity Word document conversions and media processing locally, you must run the `download_runtimes.py` script to fetch local `.exe` binaries, which are automatically omitted from cloud deployments).*
 
 ---
 
-## 🛡️ Security & Privacy
-- **100% Local**: No network requests are made outside your machine.
-- **Zero Database**: Conversions are processed in-memory and in staging folders.
-- **Self-Cleaning**: Staging folders are swept clean periodically and upon server shutdown.
+## ☁️ Render Deployment Guide (Docker)
+
+The application is fully configured to be deployed on Render using Docker. This ensures all heavy system binaries (LibreOffice, Tesseract, etc.) are installed perfectly in the cloud.
+
+### Step-by-Step Deployment:
+1. **Clone & Push**: Ensure this repository is pushed to your own GitHub account.
+2. **Log into Render**: Go to [Render.com](https://render.com) and log in with your GitHub account.
+3. **Create a New Web Service**:
+   - Click the **"New"** button at the top right and select **"Web Service"**.
+   - Connect your GitHub repository containing this project.
+4. **Configure the Service**:
+   - **Name**: Choose a name for your app.
+   - **Region**: Choose the region closest to your users.
+   - **Branch**: `main` (or whichever branch you are using).
+   - **Runtime**: Render might default to `Python` because of the `requirements.txt` file. **You MUST change the Runtime to `Docker`**. This tells Render to look for the `Dockerfile`.
+   - **Build Command**: Leave blank (Docker handles this).
+   - **Start Command**: Leave blank (Docker handles this via the `CMD` instruction).
+5. **Select Instance Type**: Choose the Free tier (or a paid tier if you need more RAM for heavy document conversions).
+6. **Deploy**: Click **"Create Web Service"**.
+   
+Render will now build the Docker image (which includes building the React frontend and installing Linux system dependencies). Once the build succeeds, it will deploy the service and provide you with a live URL (e.g., `https://your-app.onrender.com`).
+
+*Note on Free Tier: If your app is inactive for 15 minutes, Render will spin down the server. When you open the link again, it may take 1-2 minutes to "cold start" and load the webpage.*

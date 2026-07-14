@@ -1,5 +1,9 @@
 # Portable binary runtimes (should not be committed to GitHub)
 runtime/
+download_runtimes.py
+
+# User specific notes
+doubt.md
 
 # Python cache & logs
 __pycache__/
@@ -8,8 +12,10 @@ __pycache__/
 *.pyd
 .pytest_cache/
 backend/logs/*.log
+*.log
 backend/temp/
 backend/output/
+scratch/
 
 # Frontend packages & production distribution
 frontend/node_modules/

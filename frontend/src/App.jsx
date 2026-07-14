@@ -500,7 +500,7 @@ export default function App() {
               <DragDropZone 
                 onFilesAdded={handleCompressFilesAdded} 
                 accept=".pdf,.jpg,.jpeg,.png,.webp"
-                subtitle="Upload PDFs or images (JPG, PNG, WebP) to compress sizes locally"
+                subtitle="Upload PDFs or images (JPG, PNG, WebP) to compress sizes"
               />
 
               {/* Compression Quality Setting Card */}

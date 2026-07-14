@@ -55,9 +55,13 @@ class ConversionRouter:
         # 3. Check for specific layout converters (Office, PDF, spreadsheets, notebooks)
         # Iterate over converters and pick the first one that supports the route and is available
         for conv in self.converters:
-            # Skip OCR / Compression if not explicitly requested
-            if isinstance(conv, (OCREngine, CompressionEngine)) and not (options.get("ocr") or options.get("operation") == "compress"):
-                continue
+            if isinstance(conv, (OCREngine, CompressionEngine, MetadataEngine)):
+                if isinstance(conv, OCREngine) and not options.get("ocr"):
+                    continue
+                if isinstance(conv, CompressionEngine) and options.get("operation") != "compress":
+                    continue
+                if isinstance(conv, MetadataEngine) and options.get("operation") != "metadata":
+                    continue
 
             if conv.can_convert(from_ext, to_ext):
                 if conv.is_available():
