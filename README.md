@@ -2,7 +2,7 @@
 
 A professional, high-performance Universal Document Converter and PDF editing toolkit. Built with a **React + Tailwind CSS frontend** and a **FastAPI (Python) backend**, this application is designed for rapid document processing, compression, and advanced PDF manipulations.
 
-**Note**: *Contact me for the files to set up locally or for the full repository drive link.*
+
 
 ---
 
